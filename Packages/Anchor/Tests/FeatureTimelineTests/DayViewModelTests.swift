@@ -4,6 +4,13 @@ import AnchorCore
 @testable import FeatureTimeline
 
 @MainActor
+private struct Setup {
+    let viewModel: DayViewModel
+    let wins: InMemoryWinRepository
+    let plans: InMemoryDayPlanRepository
+}
+
+@MainActor
 private enum Fixture {
     static var calendar: Calendar {
         var calendar = Calendar(identifier: .gregorian)
@@ -41,11 +48,7 @@ private enum Fixture {
         )
     }
 
-    static func viewModel(
-        plan: DayPlan,
-        preferences: UserPreferences = UserPreferences(),
-        at hour: Int
-    ) async -> (DayViewModel, InMemoryWinRepository, InMemoryDayPlanRepository) {
+    static func setup(plan: DayPlan, preferences: UserPreferences = UserPreferences(), at hour: Int) async -> Setup {
         let plans = InMemoryDayPlanRepository()
         try? await plans.upsert(plan)
         let winRepo = InMemoryWinRepository(calendar: calendar)
@@ -58,14 +61,14 @@ private enum Fixture {
             preferences: prefsRepo,
             dateProvider: FixedDateProvider(now: at(hour), calendar: calendar)
         )
-        return (viewModel, winRepo, plans)
+        return Setup(viewModel: viewModel, wins: winRepo, plans: plans)
     }
 }
 
 @MainActor
 @Test func loadReadsPlanForDay() async {
     let plan = DayPlan(date: Fixture.day, blocks: [Fixture.block("Focus", start: 9, minutes: 60, order: 0)])
-    let (viewModel, _, _) = await Fixture.viewModel(plan: plan, at: 8)
+    let viewModel = await Fixture.setup(plan: plan, at: 8).viewModel
 
     await viewModel.load()
 
@@ -77,16 +80,15 @@ private enum Fixture {
 @Test func toggleDoneMarksBlockAndMintsWin() async {
     let block = Fixture.block("Focus", start: 9, minutes: 60, order: 0)
     let plan = DayPlan(date: Fixture.day, blocks: [block])
-    let (viewModel, wins, plans) = await Fixture.viewModel(plan: plan, at: 10)
-    await viewModel.load()
+    let setup = await Fixture.setup(plan: plan, at: 10)
+    await setup.viewModel.load()
 
-    await viewModel.toggleDone(blockID: block.id)
+    await setup.viewModel.toggleDone(blockID: block.id)
 
-    #expect(viewModel.blocks.first?.state == .done)
-    let events = (try? await wins.allEvents()) ?? []
+    #expect(setup.viewModel.blocks.first?.state == .done)
+    let events = (try? await setup.wins.allEvents()) ?? []
     #expect(events.count == 1)
-    // Persisted.
-    let stored = (try? await plans.plan(for: Fixture.day)) ?? nil
+    let stored = (try? await setup.plans.plan(for: Fixture.day)) ?? nil
     #expect(stored?.blocks.first?.state == .done)
 }
 
@@ -94,15 +96,15 @@ private enum Fixture {
 @Test func toggleUndoneKeepsWin() async {
     let block = Fixture.block("Focus", start: 9, minutes: 60, order: 0)
     let plan = DayPlan(date: Fixture.day, blocks: [block])
-    let (viewModel, wins, _) = await Fixture.viewModel(plan: plan, at: 10)
-    await viewModel.load()
+    let setup = await Fixture.setup(plan: plan, at: 10)
+    await setup.viewModel.load()
 
-    await viewModel.toggleDone(blockID: block.id)
-    await viewModel.toggleDone(blockID: block.id)
+    await setup.viewModel.toggleDone(blockID: block.id)
+    await setup.viewModel.toggleDone(blockID: block.id)
 
-    #expect(viewModel.blocks.first?.state == .notStarted)
+    #expect(setup.viewModel.blocks.first?.state == .notStarted)
     // Wins never reset: the earned win stays.
-    let events = (try? await wins.allEvents()) ?? []
+    let events = (try? await setup.wins.allEvents()) ?? []
     #expect(events.count == 1)
 }
 
@@ -110,12 +112,12 @@ private enum Fixture {
 @Test func restCompletionMintsRestWin() async {
     let rest = Fixture.block("Quiet time", category: .rest, start: 14, minutes: 30, order: 0)
     let plan = DayPlan(date: Fixture.day, blocks: [rest])
-    let (viewModel, wins, _) = await Fixture.viewModel(plan: plan, at: 14)
-    await viewModel.load()
+    let setup = await Fixture.setup(plan: plan, at: 14)
+    await setup.viewModel.load()
 
-    await viewModel.toggleDone(blockID: rest.id)
+    await setup.viewModel.toggleDone(blockID: rest.id)
 
-    let events = (try? await wins.allEvents()) ?? []
+    let events = (try? await setup.wins.allEvents()) ?? []
     #expect(events.first?.kind == .rest)
 }
 
@@ -125,28 +127,28 @@ private enum Fixture {
     prefs.winsPaused = true
     let block = Fixture.block("Focus", start: 9, minutes: 60, order: 0)
     let plan = DayPlan(date: Fixture.day, blocks: [block])
-    let (viewModel, wins, _) = await Fixture.viewModel(plan: plan, preferences: prefs, at: 10)
-    await viewModel.load()
+    let setup = await Fixture.setup(plan: plan, preferences: prefs, at: 10)
+    await setup.viewModel.load()
 
-    await viewModel.toggleDone(blockID: block.id)
+    await setup.viewModel.toggleDone(blockID: block.id)
 
-    #expect(viewModel.blocks.first?.state == .done)
-    let events = (try? await wins.allEvents()) ?? []
+    #expect(setup.viewModel.blocks.first?.state == .done)
+    let events = (try? await setup.wins.allEvents()) ?? []
     #expect(events.isEmpty)
 }
 
 @MainActor
 @Test func switchModeConvertsAndPersistsLosingNoData() async {
     let plan = DayPlan(date: Fixture.day, mode: .clock, blocks: [Fixture.block("Focus", start: 9, minutes: 60, order: 0)])
-    let (viewModel, _, plans) = await Fixture.viewModel(plan: plan, at: 8)
-    await viewModel.load()
+    let setup = await Fixture.setup(plan: plan, at: 8)
+    await setup.viewModel.load()
 
-    await viewModel.switchMode()
+    await setup.viewModel.switchMode()
 
-    #expect(viewModel.plan.mode == .sequence)
+    #expect(setup.viewModel.plan.mode == .sequence)
     // Times are retained dormant, not lost.
-    #expect(viewModel.blocks.first?.startTime == Fixture.at(9))
-    let stored = (try? await plans.plan(for: Fixture.day)) ?? nil
+    #expect(setup.viewModel.blocks.first?.startTime == Fixture.at(9))
+    let stored = (try? await setup.plans.plan(for: Fixture.day)) ?? nil
     #expect(stored?.mode == .sequence)
 }
 
@@ -155,13 +157,13 @@ private enum Fixture {
     let done = Fixture.block("Morning", start: 9, minutes: 50, order: 0, state: .done)
     let upcoming = Fixture.block("Errand", category: .out, start: 10, minutes: 60, order: 1)
     let plan = DayPlan(date: Fixture.day, blocks: [done, upcoming])
-    let (viewModel, _, _) = await Fixture.viewModel(plan: plan, at: 10)
-    await viewModel.load()
+    let setup = await Fixture.setup(plan: plan, at: 10)
+    await setup.viewModel.load()
 
     // Running 20 minutes late.
-    await viewModel.shiftDay()
+    await setup.viewModel.shiftDay()
 
-    let moved = viewModel.plan.block(withID: upcoming.id)
+    let moved = setup.viewModel.plan.block(withID: upcoming.id)
     #expect(moved?.startTime == Fixture.at(10, 20))
 }
 
@@ -169,12 +171,12 @@ private enum Fixture {
 @Test func convertToRestChangesCategory() async {
     let block = Fixture.block("Chores", category: .home, start: 13, minutes: 60, order: 0)
     let plan = DayPlan(date: Fixture.day, blocks: [block])
-    let (viewModel, _, plans) = await Fixture.viewModel(plan: plan, at: 12)
-    await viewModel.load()
+    let setup = await Fixture.setup(plan: plan, at: 12)
+    await setup.viewModel.load()
 
-    await viewModel.convertToRest(blockID: block.id)
+    await setup.viewModel.convertToRest(blockID: block.id)
 
-    #expect(viewModel.plan.block(withID: block.id)?.category == .rest)
-    let stored = (try? await plans.plan(for: Fixture.day)) ?? nil
+    #expect(setup.viewModel.plan.block(withID: block.id)?.category == .rest)
+    let stored = (try? await setup.plans.plan(for: Fixture.day)) ?? nil
     #expect(stored?.block(withID: block.id)?.category == .rest)
 }
