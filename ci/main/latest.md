@@ -1,9 +1,9 @@
-# CI report — main @ 534eafae050361118bda8d17980e61cb75c56899
+# CI report — main @ 2d8fd6add70260a70c3915d149c6aa2ec649c8d7
 
-- run: 28710657992 attempt 1
+- run: 28710750061 attempt 1
 - outcome: success
-- date: 2026-07-04T15:23:37Z
-- url: https://github.com/HugoReel/anchor-ios/actions/runs/28710657992
+- date: 2026-07-04T15:27:26Z
+- url: https://github.com/HugoReel/anchor-ios/actions/runs/28710750061
 
 ## build/lint.log
 
@@ -23,21 +23,21 @@
 
 ### summary lines
 ```
-Test Suite 'All tests' started at 2026-07-04 15:22:46.722.
-Test Suite 'All tests' passed at 2026-07-04 15:22:46.723.
+Test Suite 'All tests' started at 2026-07-04 15:26:48.828.
+Test Suite 'All tests' passed at 2026-07-04 15:26:48.828.
 	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
 ◇ Test run started.
-✔ Test run with 85 tests passed after 0.246 seconds.
-Test Suite 'All tests' started at 2026-07-04 15:22:55.121.
-Test Suite 'All tests' passed at 2026-07-04 15:22:55.122.
+✔ Test run with 85 tests passed after 0.233 seconds.
+Test Suite 'All tests' started at 2026-07-04 15:26:52.508.
+Test Suite 'All tests' passed at 2026-07-04 15:26:52.508.
 	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
 ◇ Test run started.
-✔ Test run with 8 tests passed after 0.280 seconds.
-Test Suite 'All tests' started at 2026-07-04 15:23:02.893.
-Test Suite 'All tests' passed at 2026-07-04 15:23:02.893.
-	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+✔ Test run with 8 tests passed after 0.013 seconds.
+Test Suite 'All tests' started at 2026-07-04 15:26:54.198.
+Test Suite 'All tests' passed at 2026-07-04 15:26:54.198.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
 ◇ Test run started.
-✔ Test run with 13 tests passed after 0.946 seconds.
+✔ Test run with 13 tests passed after 0.215 seconds.
 ** TEST SUCCEEDED **
 ```
 
