@@ -521,10 +521,10 @@ InMemory implementations: `actor` wrapping dictionaries. Named tests: per-repo `
 
 ### Task 2.6: RED push, then implementation, then GREEN push
 
-- [ ] **Step 1:** Commit tests + type/interface stubs (stub bodies return neutral wrong values: empty arrays, `nil`, `0`, input-unchanged). `test: add phase-2 domain test suite (red)`
-- [ ] **Step 2:** Push; **verify RED via ci-logs** — expected: compile succeeds, dozens of assertion failures with recognisable test names, no crashes.
-- [ ] **Step 3:** Implement all engines/repositories minimally to pass; commit `feat: implement domain engines and persistence (green)`.
-- [ ] **Step 4:** Push; verify GREEN + coverage: add `xcrun xccov view --report` extraction to `scripts/ci-report.sh`, gate `AnchorCore ≥ 80%` (fail step if below). Update plan checkboxes; wire `AppDependencies.live()` to real container (app still shows placeholders).
+- [x] **Step 1:** Commit tests + neutral stubs. `test: add phase-2 domain test suite (red)` (5fd9061).
+- [x] **Step 2:** Push; **verified RED** — run 28703618370: compile succeeded, 65 assertion failures across the domain suite, 8 design tests still green, no crashes.
+- [x] **Step 3:** Implemented all engines + repositories + SwiftData persistence to pass; `feat: implement domain engines and persistence (green)` (8af3628). Blind-compile iterations: lint pipefail masking, lint style, repository method-name collisions (deletePlan/allTemplates/…), orphaned doc comments — each surfaced by ci-logs and fixed forward.
+- [x] **Step 4:** **Verified GREEN** — run 28710530091: lint clean, 106 tests pass (85 Core + 8 Design + 13 Persistence incl. SwiftData round-trip and migration), `BUILD SUCCEEDED`. **AnchorCore coverage 83.28%** (run 534eafae), now enforced as a CI gate. `AppDependencies.live()` opens the real container with in-memory fallback.
 
 ---
 
