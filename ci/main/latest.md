@@ -1,39 +1,15 @@
-# CI report — main @ 477dc4c8c591b4d3ed6dadbcc77712ca104c21e4
+# CI report — main @ c815a5a215da2079447bf06475bc92b409f7238d
 
-- run: 28710285184 attempt 1
+- run: 28710449365 attempt 1
 - outcome: failure
-- date: 2026-07-04T15:09:00Z
-- url: https://github.com/HugoReel/anchor-ios/actions/runs/28710285184
+- date: 2026-07-04T15:15:13Z
+- url: https://github.com/HugoReel/anchor-ios/actions/runs/28710449365
 
 ## build/lint.log
 
 ### errors and warnings
 ```
-```
-
-### summary lines
-```
-```
-
-## build/test-packages.log
-
-### errors and warnings
-```
-/Users/runner/work/anchor-ios/anchor-ios/Packages/Anchor/Sources/AnchorPersistence/SwiftDataStore.swift:114:17: error: invalid redeclaration of 'delete(id:)'
-/Users/runner/work/anchor-ios/anchor-ios/Packages/Anchor/Sources/AnchorPersistence/SwiftDataStore.swift:153:17: error: invalid redeclaration of 'delete(id:)'
-/Users/runner/work/anchor-ios/anchor-ios/Packages/Anchor/Sources/AnchorPersistence/SwiftDataStore.swift:350:17: error: invalid redeclaration of 'delete(id:)'
-/Users/runner/work/anchor-ios/anchor-ios/Packages/Anchor/Sources/AnchorPersistence/SwiftDataStore.swift:36:1: error: type 'SwiftDataStore' does not conform to protocol 'DayPlanRepository'
-```
-
-### summary lines
-```
-** TEST FAILED **
-```
-
-## build/coverage.txt
-
-### errors and warnings
-```
+/Users/runner/work/anchor-ios/anchor-ios/Packages/Anchor/Sources/AnchorCore/Repositories/RepositoryProtocols.swift:3:1: error: Orphaned Doc Comment Violation: A doc comment should be attached to a declaration (orphaned_doc_comment)
 ```
 
 ### summary lines
