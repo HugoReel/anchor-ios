@@ -30,6 +30,10 @@ public struct UserPreferences: Sendable, Hashable, Codable, Identifiable {
     public var quietEndMinutes: Int?
     public var onboardingComplete: Bool
     public var seedDataInserted: Bool
+    /// Day (`yyyymmdd`) on which the Today reflection nudge was dismissed, so
+    /// it stays gone for that day and returns fresh the next. Optional so it
+    /// decodes from older stored payloads.
+    public var reflectionNudgeDismissedDayKey: Int?
     public let createdAt: Date
     public var modifiedAt: Date
 
@@ -57,6 +61,7 @@ public struct UserPreferences: Sendable, Hashable, Codable, Identifiable {
         quietEndMinutes: Int? = nil,
         onboardingComplete: Bool = false,
         seedDataInserted: Bool = false,
+        reflectionNudgeDismissedDayKey: Int? = nil,
         createdAt: Date = Date(),
         modifiedAt: Date = Date()
     ) {
@@ -83,6 +88,7 @@ public struct UserPreferences: Sendable, Hashable, Codable, Identifiable {
         self.quietEndMinutes = quietEndMinutes
         self.onboardingComplete = onboardingComplete
         self.seedDataInserted = seedDataInserted
+        self.reflectionNudgeDismissedDayKey = reflectionNudgeDismissedDayKey
         self.createdAt = createdAt
         self.modifiedAt = modifiedAt
     }

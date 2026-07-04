@@ -1,36 +1,33 @@
 import SwiftUI
+import AnchorCore
+import AnchorDesign
 
-/// Placeholder root for the Today tab. The real dashboard arrives in phase 3.
+/// Entry point for the Today tab. Builds and owns the view model from the
+/// injected repositories, then loads on appear.
 public struct TodayRootView: View {
-    public init() {}
+    @State private var viewModel: TodayViewModel
 
-    public var body: some View {
-        PlaceholderScreen(
-            symbol: "sun.max",
-            title: "Today",
-            message: "Your day, at a gentle pace. This screen arrives in a later phase."
+    @MainActor
+    public init(
+        dayPlans: any DayPlanRepository,
+        energy: any EnergyRepository,
+        wins: any WinRepository,
+        preferences: any PreferencesRepository,
+        dateProvider: any DateProviding
+    ) {
+        _viewModel = State(
+            initialValue: TodayViewModel(
+                dayPlans: dayPlans,
+                energy: energy,
+                wins: wins,
+                preferences: preferences,
+                dateProvider: dateProvider
+            )
         )
     }
-}
 
-/// Shared placeholder used by every tab until its feature lands.
-struct PlaceholderScreen: View {
-    let symbol: String
-    let title: String
-    let message: String
-
-    var body: some View {
-        VStack(spacing: 12) {
-            Image(systemName: symbol)
-                .font(.largeTitle)
-                .foregroundStyle(.secondary)
-            Text(title)
-                .font(.title2)
-            Text(message)
-                .font(.body)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-        }
-        .padding(32)
+    public var body: some View {
+        TodayContentView(viewModel: viewModel)
+            .task { await viewModel.load() }
     }
 }

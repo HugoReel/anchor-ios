@@ -12,7 +12,17 @@ struct RootTabView: View {
 
     var body: some View {
         TabView {
-            tab(TodayRootView(), title: "Today", symbol: "sun.max")
+            tab(
+                TodayRootView(
+                    dayPlans: dependencies.store,
+                    energy: dependencies.store,
+                    wins: dependencies.store,
+                    preferences: dependencies.store,
+                    dateProvider: dependencies.dateProvider
+                ),
+                title: "Today",
+                symbol: "sun.max"
+            )
             tab(DayRootView(), title: "Day", symbol: "calendar.day.timeline.left")
             tab(GoalsRootView(), title: "Goals", symbol: "flag")
             tab(ReflectRootView(), title: "Reflect", symbol: "book.closed")
