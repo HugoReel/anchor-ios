@@ -19,7 +19,7 @@ REPORT="$OUT/latest.md"
   echo "- date: $(date -u +%FT%TZ)"
   echo "- url: ${GITHUB_SERVER_URL:-https://github.com}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID:-0}"
 
-  for f in build/lint.log build/test-packages.log build/app-build.log build/coverage.txt; do
+  for f in build/lint.log build/test-packages.log build/app-build.log; do
     [ -f "$f" ] || continue
     echo ""
     echo "## ${f}"
@@ -34,6 +34,14 @@ REPORT="$OUT/latest.md"
     grep -E "(Test Suite|Test run|Executed|tests? passed|tests? failed|BUILD SUCCEEDED|BUILD FAILED|TEST SUCCEEDED|TEST FAILED|Linting|Done linting|violations)" "$f" | tail -60 || true
     echo '```'
   done
+
+  if [ -f build/coverage.txt ]; then
+    echo ""
+    echo "## coverage (per target)"
+    echo '```'
+    cat build/coverage.txt | head -60 || true
+    echo '```'
+  fi
 } > "$REPORT"
 
 REMOTE="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"

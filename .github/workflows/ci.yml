@@ -46,9 +46,7 @@ jobs:
         if: always()
         run: |
           if [ -d build/package-tests.xcresult ]; then
-            xcrun xccov view --report build/package-tests.xcresult > build/coverage.txt || true
-            echo "=== AnchorCore ===" >> build/coverage.txt
-            grep -i "AnchorCore" build/coverage.txt | head -5 || true
+            xcrun xccov view --report --only-targets build/package-tests.xcresult > build/coverage.txt || true
           fi
 
       - name: App build
