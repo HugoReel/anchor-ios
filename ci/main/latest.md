@@ -1,9 +1,9 @@
-# CI report — main @ 2d8fd6add70260a70c3915d149c6aa2ec649c8d7
+# CI report — main @ f6d1857198339abe9b96eabf76284df592d63665
 
-- run: 28710750061 attempt 1
+- run: 28711037584 attempt 1
 - outcome: success
-- date: 2026-07-04T15:27:26Z
-- url: https://github.com/HugoReel/anchor-ios/actions/runs/28710750061
+- date: 2026-07-04T15:39:30Z
+- url: https://github.com/HugoReel/anchor-ios/actions/runs/28711037584
 
 ## build/lint.log
 
@@ -23,21 +23,26 @@
 
 ### summary lines
 ```
-Test Suite 'All tests' started at 2026-07-04 15:26:48.828.
-Test Suite 'All tests' passed at 2026-07-04 15:26:48.828.
-	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
-◇ Test run started.
-✔ Test run with 85 tests passed after 0.233 seconds.
-Test Suite 'All tests' started at 2026-07-04 15:26:52.508.
-Test Suite 'All tests' passed at 2026-07-04 15:26:52.508.
-	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
-◇ Test run started.
-✔ Test run with 8 tests passed after 0.013 seconds.
-Test Suite 'All tests' started at 2026-07-04 15:26:54.198.
-Test Suite 'All tests' passed at 2026-07-04 15:26:54.198.
+Test Suite 'All tests' started at 2026-07-04 15:37:38.091.
+Test Suite 'All tests' passed at 2026-07-04 15:37:38.092.
 	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
 ◇ Test run started.
-✔ Test run with 13 tests passed after 0.215 seconds.
+✔ Test run with 85 tests passed after 10.448 seconds.
+Test Suite 'All tests' started at 2026-07-04 15:38:13.968.
+Test Suite 'All tests' passed at 2026-07-04 15:38:13.969.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+✔ Test run with 8 tests passed after 0.013 seconds.
+Test Suite 'All tests' started at 2026-07-04 15:38:19.382.
+Test Suite 'All tests' passed at 2026-07-04 15:38:19.382.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+◇ Test run started.
+✔ Test run with 13 tests passed after 0.440 seconds.
+Test Suite 'All tests' started at 2026-07-04 15:38:37.601.
+Test Suite 'All tests' passed at 2026-07-04 15:38:37.602.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+✔ Test run with 9 tests passed after 0.057 seconds.
 ** TEST SUCCEEDED **
 ```
 
@@ -56,12 +61,12 @@ Test Suite 'All tests' passed at 2026-07-04 15:26:54.198.
 ```
 ID Name                   # Source Files Coverage           
 -- ---------------------- -------------- ------------------ 
-0  AnchorCore             31             83.28% (807/969)   
-1  AnchorCoreTests        45             91.00% (1740/1912) 
-2  AnchorDesign           5              79.08% (121/153)   
-3  AnchorDesignTests      39             84.14% (1029/1223) 
+0  AnchorCore             31             84.12% (816/970)   
+1  AnchorCoreTests        45             91.43% (1749/1913) 
+2  AnchorDesign           9              49.59% (121/244)   
+3  AnchorDesignTests      43             78.94% (1038/1315) 
 4  AnchorPersistence      5              67.20% (295/439)   
-5  AnchorPersistenceTests 38             80.12% (1249/1559) 
+5  AnchorPersistenceTests 38             80.64% (1258/1560) 
 6  AnchorPlatform         0              0.00% (0/0)        
 7  FeatureCoping          0              0.00% (0/0)        
 8  FeatureGoals           0              0.00% (0/0)        
@@ -69,6 +74,7 @@ ID Name                   # Source Files Coverage
 10 FeatureReflect         0              0.00% (0/0)        
 11 FeatureSettings        0              0.00% (0/0)        
 12 FeatureTimeline        0              0.00% (0/0)        
-13 FeatureToday           0              0.00% (0/0)        
+13 FeatureToday           3              14.89% (60/403)    
+14 FeatureTodayTests      35             66.73% (999/1497)  
 
 ```
