@@ -26,8 +26,8 @@ private func hsv(of color: RGBAColor) -> HSV {
     return HSV(hue: hue, saturation: saturation)
 }
 
-private func hueDistance(_ a: Double, _ b: Double) -> Double {
-    let direct = abs(a - b)
+private func hueDistance(_ first: Double, _ second: Double) -> Double {
+    let direct = abs(first - second)
     return min(direct, 360 - direct)
 }
 

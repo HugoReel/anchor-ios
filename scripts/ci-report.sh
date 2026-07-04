@@ -26,7 +26,7 @@ REPORT="$OUT/latest.md"
     echo ""
     echo "### errors and warnings"
     echo '```'
-    grep -E "(error|warning):" "$f" | grep -v "warnings-as-errors" | sort -u | head -120 || true
+    grep -E "(error|warning):" "$f" | grep -v "warnings-as-errors" | grep -v "appintentsmetadataprocessor" | sort -u | head -120 || true
     echo '```'
     echo ""
     echo "### summary lines"

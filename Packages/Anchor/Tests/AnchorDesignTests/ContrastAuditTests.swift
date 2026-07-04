@@ -23,7 +23,7 @@ func allAuditPairsMeetWCAG(choice: ThemeChoice) {
 }
 
 @Test func contrastRatioIsSymmetric() {
-    let a = RGBAColor(0x3E6B57)
-    let b = RGBAColor(0xF2F5F1)
-    #expect(abs(a.contrastRatio(with: b) - b.contrastRatio(with: a)) < 0.0001)
+    let sage = RGBAColor(0x3E6B57)
+    let mist = RGBAColor(0xF2F5F1)
+    #expect(abs(sage.contrastRatio(with: mist) - mist.contrastRatio(with: sage)) < 0.0001)
 }

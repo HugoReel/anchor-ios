@@ -262,7 +262,7 @@ git push -qf "https://x-access-token:${GITHUB_TOKEN:-$(cat /dev/null)}@github.co
 Note: `GITHUB_TOKEN` must be exported to the step — add `env: GITHUB_TOKEN: ${{ github.token }}` to the "Publish ci-logs" step.
 
 - [x] **Step 4: Commit** — `chore: bootstrap package, lint, Makefile and CI pipeline probe`
-- [ ] **Step 5: Push once repo exists; verify GREEN** via the observation loop. Expected: lint 0 violations; `Executed 1 test, with 0 failures`; app-build step skipped (no `project.yml` yet); `ci/main/latest.md` readable raw. Fix-forward until green — **this task is the loop calibration.**
+- [x] **Step 5: Push once repo exists; verify GREEN** — run 28702682207 green first try (whole Phase 1 pushed at once; probe staging unnecessary). ci-logs readable unauthenticated. Found and fixed a false green: make 3.81 ignores .SHELLFLAGS so tee masked SwiftLint's exit code; pipefail now inline per recipe and the 7 masked identifier_name violations are fixed.
 
 ### Task 1.2: Full package skeleton — eleven targets
 
@@ -292,7 +292,7 @@ public struct AnchorLogger: Sendable {
 ```
 
 - [x] **Step 3: Commit** — `feat: add full module target graph`
-- [ ] **Step 4:** Verify GREEN on CI (same expectations as 1.1, still 1 test).
+- [x] **Step 4:** Verify GREEN on CI — covered by run 28702682207.
 
 ### Task 1.3: Lexend fonts + app target + tab shell
 
@@ -362,7 +362,7 @@ schemes:
 
 - [x] **Step 2:** `AnchorApp.swift` (`@main`, injects dependencies via environment), `AppDependencies.swift` (Phase 1: empty container + logger; grows in Phase 2), `RootTabView.swift`: `TabView` with four fixed tabs (Today `anchor` SF symbol? — use `sun.max` Today, `calendar.day.timeline.left` Day, `flag` Goals, `book.closed` Reflect; final glyphs revisited in Phase 3 design pass), each tab a `NavigationStack` with placeholder screen text + gear `ToolbarItem` pushing empty `SettingsPlaceholderView`. All copy sentence case, no exclamation marks.
 - [x] **Step 3: Commit** — `feat: add app target shell with fixed four-tab navigation and bundled Lexend`
-- [ ] **Step 4:** Verify GREEN (app build job now runs; expect `BUILD SUCCEEDED`).
+- [x] **Step 4:** Verify GREEN — `BUILD SUCCEEDED` in run 28702682207.
 
 ### Task 1.4: AnchorDesign tokens, four themes, automated WCAG audit
 
@@ -403,7 +403,7 @@ relative luminance `L = 0.2126·R' + 0.7152·G' + 0.0722·B'` where `c' = c/12.9
 - [x] **Step 1: Failing tests first** — `ContrastAuditTests`: for every `ThemeChoice`, every `contrastAuditPairs` entry asserts `ratio ≥ minimum` (body pairs 4.5, large-text/secondary-on-surface pairs per declaration; category chip text pairs included); known-value test: `RGBAColor(1,1,1,1).contrastRatio(with: .init(0,0,0,1)) == 21 ± 0.01`. `ThemeConsistencyTests`: category hues stay recognisable across themes — for each category, hue angle spread across the four themes ≤ 40°; Rest is distinct from the five pastels in every theme (ΔE or min hue distance assertion); no theme colour equals pure red territory (hue 345°–15° with saturation > 0.5 banned — "never red").
 - [x] **Step 2:** Implement tokens + four muted-pastel themes (design skills applied: Lexend personality, low saturation, distinct-but-calm palettes; Low-light = dark theme with reduced contrast ceilings still ≥ 4.5 body). Iterate values until the audit passes **by construction locally computed** (the WCAG math runs identically in my head/spreadsheet and in CI — pick values with margin ≥ 4.8).
 - [x] **Step 3: Commit** — `feat: add design tokens, four themes, Lexend mapping and automated WCAG audit` (9117c21; interface drift from plan: `contrastAuditPairs` returns `[ContrastPair]` struct not tuples; `AnchorFont.font` is a property plus `.anchorFont(_:)` view modifier; `MotionLevel` case `off` not `none` to avoid Optional-pattern clashes)
-- [ ] **Step 4:** Verify GREEN. Phase 1 gate: lint clean, all tests green, app builds. Update this plan's checkboxes; append phase note to DECISIONS.md if any deviation occurred.
+- [x] **Step 4:** Verify GREEN. Phase 1 gate met: 14 package tests green (6 core, 8 design), app builds, lint truly strict after the pipefail fix.
 
 ---
 
