@@ -34,7 +34,16 @@ struct RootTabView: View {
                 title: "Day",
                 symbol: "calendar.day.timeline.left"
             )
-            tab(GoalsRootView(), title: "Goals", symbol: "flag")
+            tab(
+                GoalsRootView(
+                    goals: dependencies.store,
+                    wins: dependencies.store,
+                    preferences: dependencies.store,
+                    dateProvider: dependencies.dateProvider
+                ),
+                title: "Goals",
+                symbol: "flag"
+            )
             tab(ReflectRootView(), title: "Reflect", symbol: "book.closed")
         }
     }

@@ -250,7 +250,8 @@ private enum Fixture {
     await setup.viewModel.markAllStepsDone(blockID: block.id)
 
     let steps = setup.viewModel.plan.block(withID: block.id)?.steps ?? []
-    #expect(steps.allSatisfy(\.isDone))
+    let allDone = steps.allSatisfy(\.isDone)
+    #expect(allDone)
 }
 
 @MainActor
@@ -272,7 +273,8 @@ private enum Fixture {
     #expect(setup.viewModel.blocks.count == 2)
     #expect(setup.viewModel.blocks.first?.startTime == Fixture.at(9))
     let breakfast = setup.viewModel.plan.blocks.first { $0.title == "Breakfast" }
-    #expect(breakfast?.steps.map(\.title) == ["Tea", "Toast"])
+    let breakfastSteps = breakfast?.steps.map(\.title)
+    #expect(breakfastSteps == ["Tea", "Toast"])
 }
 
 @MainActor

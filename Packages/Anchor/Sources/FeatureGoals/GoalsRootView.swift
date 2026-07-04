@@ -1,21 +1,36 @@
 import SwiftUI
+import AnchorCore
+import AnchorDesign
 
-/// Placeholder root for the Goals tab. Goal tracking arrives in phase 3.
+/// Entry point for the Goals tab.
 public struct GoalsRootView: View {
-    public init() {}
+    @State private var viewModel: GoalsViewModel
+    @State private var editingGoal: Goal?
+
+    @MainActor
+    public init(
+        goals: any GoalRepository,
+        wins: any WinRepository,
+        preferences: any PreferencesRepository,
+        dateProvider: any DateProviding
+    ) {
+        _viewModel = State(
+            initialValue: GoalsViewModel(
+                goals: goals,
+                wins: wins,
+                preferences: preferences,
+                dateProvider: dateProvider
+            )
+        )
+    }
 
     public var body: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "flag")
-                .font(.largeTitle)
-                .foregroundStyle(.secondary)
-            Text("Goals")
-                .font(.title2)
-            Text("Small steps towards what matters. Coming soon.")
-                .font(.body)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-        }
-        .padding(32)
+        GoalsContentView(viewModel: viewModel, onNewGoal: { editingGoal = Goal(title: "") })
+            .task { await viewModel.load() }
+            .sheet(item: $editingGoal) { goal in
+                GoalEditorSheet(goal: goal) { edited in
+                    Task { await viewModel.upsertGoal(edited) }
+                }
+            }
     }
 }
