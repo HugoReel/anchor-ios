@@ -1,21 +1,30 @@
 import SwiftUI
+import AnchorCore
+import AnchorDesign
 
-/// Placeholder root for the Reflect tab. The check-in space arrives in phase 3.
+/// Entry point for the Reflect tab.
 public struct ReflectRootView: View {
-    public init() {}
+    @State private var viewModel: ReflectViewModel
+
+    @MainActor
+    public init(
+        reflections: any ReflectionRepository,
+        wins: any WinRepository,
+        preferences: any PreferencesRepository,
+        dateProvider: any DateProviding
+    ) {
+        _viewModel = State(
+            initialValue: ReflectViewModel(
+                reflections: reflections,
+                wins: wins,
+                preferences: preferences,
+                dateProvider: dateProvider
+            )
+        )
+    }
 
     public var body: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "book.closed")
-                .font(.largeTitle)
-                .foregroundStyle(.secondary)
-            Text("Reflect")
-                .font(.title2)
-            Text("A quiet space to notice how things are. Coming soon.")
-                .font(.body)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-        }
-        .padding(32)
+        ReflectContentView(viewModel: viewModel)
+            .task { await viewModel.load() }
     }
 }

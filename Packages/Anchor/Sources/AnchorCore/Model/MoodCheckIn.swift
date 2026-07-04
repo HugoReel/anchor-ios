@@ -64,3 +64,16 @@ public enum BodySensationCatalog {
         "empty stomach"
     ]
 }
+
+/// Optional granular emotion words for the searchable list. Never required;
+/// offered only for those who find naming helpful.
+public enum EmotionCatalog {
+    public static let words: [String] = [
+        "content", "calm", "settled", "hopeful", "curious", "glad", "proud",
+        "relieved", "grateful", "affectionate", "playful", "tender",
+        "tired", "drained", "sleepy", "restless", "wired", "foggy",
+        "tense", "on edge", "nervous", "uneasy", "overwhelmed", "irritable",
+        "frustrated", "annoyed", "disappointed", "low", "flat", "numb",
+        "lonely", "sad", "hurt", "vulnerable", "embarrassed", "unsure"
+    ]
+}

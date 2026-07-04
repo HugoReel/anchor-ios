@@ -44,7 +44,16 @@ struct RootTabView: View {
                 title: "Goals",
                 symbol: "flag"
             )
-            tab(ReflectRootView(), title: "Reflect", symbol: "book.closed")
+            tab(
+                ReflectRootView(
+                    reflections: dependencies.store,
+                    wins: dependencies.store,
+                    preferences: dependencies.store,
+                    dateProvider: dependencies.dateProvider
+                ),
+                title: "Reflect",
+                symbol: "book.closed"
+            )
         }
     }
 
