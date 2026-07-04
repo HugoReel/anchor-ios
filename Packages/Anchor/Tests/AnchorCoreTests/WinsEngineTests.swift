@@ -86,7 +86,7 @@ private let newYork = TestSupport.newYork
 
     #expect(!summaries.isEmpty)
     for summary in summaries {
-        #expect(summary.count > 0, "zero-count summaries must be omitted, got \(summary.label)")
+        #expect(summary.count >= 1, "zero-count summaries must be omitted, got \(summary.label)")
         #expect(!summary.label.lowercased().contains("missed"))
         #expect(!summary.label.contains("!"))
     }

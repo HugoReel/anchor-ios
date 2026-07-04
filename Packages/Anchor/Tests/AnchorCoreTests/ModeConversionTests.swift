@@ -18,6 +18,12 @@ private let newYork = TestSupport.newYork
     #expect(converted.sortedBlocks.map(\.title) == ["Morning focus", "Lunch"])
 }
 
+private func fingerprint(_ plan: DayPlan) -> [[String]] {
+    plan.sortedBlocks.map { block in
+        [block.title, String(describing: block.startTime), String(describing: block.durationMinutes)]
+    }
+}
+
 @Test func convertRoundTripLossless() {
     let morning = TestSupport.block("Morning focus", startHour: 9, minutes: 50, order: 0)
     let lunch = TestSupport.block("Lunch", category: .care, startHour: 12, minutes: 45, order: 1)
@@ -27,9 +33,7 @@ private let newYork = TestSupport.newYork
     let restored = ModeConversion.convert(sequence, to: .clock, wakeStartMinutes: nil, calendar: newYork)
 
     #expect(restored.mode == .clock)
-    let original = plan.sortedBlocks.map { block in [block.title, String(describing: block.startTime), String(describing: block.durationMinutes)] }
-    let roundTripped = restored.sortedBlocks.map { block in [block.title, String(describing: block.startTime), String(describing: block.durationMinutes)] }
-    #expect(original == roundTripped)
+    #expect(fingerprint(plan) == fingerprint(restored))
 }
 
 @Test func convertToSameModeIsNoOp() {
