@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Tool versions
+        run: |
+          sw_vers
+          xcodebuild -version
+          swift --version
+
+      - name: Install tools
+        run: brew install xcodegen swiftlint
+
+      - name: Resolve simulator
+        id: sim
+        run: |
+          set -euo pipefail
+          NAME=$(xcrun simctl list devices available --json \
+            | jq -r '[.devices[] | .[] | select(.isAvailable) | select(.name | test("^iPhone")) | .name] | (map(select(. == "iPhone 16")) + .)[0]')
+          echo "Using simulator: $NAME"
+          echo "name=$NAME" >> "$GITHUB_OUTPUT"
+
+      - name: Lint
+        run: make lint
+
+      - name: Package tests
+        run: make test-packages SIM_NAME="${{ steps.sim.outputs.name }}"
+
+      - name: App build
+        if: ${{ hashFiles('project.yml') != '' }}
+        run: make build SIM_NAME="${{ steps.sim.outputs.name }}"
+
+      - name: Publish ci-logs
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          OUTCOME: ${{ job.status }}
+        run: bash scripts/ci-report.sh
+
+      - name: Upload full logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs
+          path: |
+            build/*.log
+          if-no-files-found: ignore

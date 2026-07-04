@@ -1,0 +1,32 @@
+included:
+  - App
+  - Packages/Anchor/Sources
+  - Packages/Anchor/Tests
+
+opt_in_rules:
+  - empty_count
+  - closure_spacing
+  - contains_over_first_not_nil
+  - fatal_error_message
+  - force_unwrapping
+
+disabled_rules:
+  - todo
+
+force_unwrapping:
+  severity: error
+
+line_length:
+  warning: 140
+  error: 200
+
+identifier_name:
+  min_length: 2
+
+type_body_length:
+  warning: 350
+  error: 500
+
+file_length:
+  warning: 500
+  error: 800
