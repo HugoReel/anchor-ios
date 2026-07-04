@@ -1,21 +1,33 @@
 import SwiftUI
+import AnchorCore
+import AnchorDesign
 
-/// Placeholder root for the Day tab. The timeline arrives in phase 3.
+/// Entry point for the Day tab. Builds the view model for today from the
+/// injected repositories and clock.
 public struct DayRootView: View {
-    public init() {}
+    @State private var viewModel: DayViewModel
+
+    @MainActor
+    public init(
+        dayPlans: any DayPlanRepository,
+        wins: any WinRepository,
+        preferences: any PreferencesRepository,
+        dateProvider: any DateProviding
+    ) {
+        let today = DayDate(date: dateProvider.now, calendar: dateProvider.calendar)
+        _viewModel = State(
+            initialValue: DayViewModel(
+                day: today,
+                dayPlans: dayPlans,
+                wins: wins,
+                preferences: preferences,
+                dateProvider: dateProvider
+            )
+        )
+    }
 
     public var body: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "calendar.day.timeline.left")
-                .font(.largeTitle)
-                .foregroundStyle(.secondary)
-            Text("Day")
-                .font(.title2)
-            Text("Your timeline lives here soon.")
-                .font(.body)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-        }
-        .padding(32)
+        DayContentView(viewModel: viewModel)
+            .task { await viewModel.load() }
     }
 }
