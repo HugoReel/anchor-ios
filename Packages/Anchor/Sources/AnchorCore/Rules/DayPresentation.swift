@@ -17,12 +17,14 @@ public struct DayPresentation: Sendable, Hashable {
     }
 
     public static func standard(mode: ScheduleMode, preferences: UserPreferences) -> DayPresentation {
-        DayPresentation(
-            showsTimes: false,
-            showsTimers: false,
-            showsTransitionWarnings: false,
-            showsWins: false,
-            invitational: false
+        let lowDemand = preferences.lowDemandMode
+        let timed = mode == .clock && !lowDemand
+        return DayPresentation(
+            showsTimes: timed,
+            showsTimers: timed,
+            showsTransitionWarnings: timed,
+            showsWins: preferences.showWins && !lowDemand,
+            invitational: lowDemand
         )
     }
 }

@@ -39,4 +39,18 @@ public struct DayDate: Sendable, Hashable, Codable, Comparable {
     public static func < (lhs: DayDate, rhs: DayDate) -> Bool {
         (lhs.year, lhs.month, lhs.day) < (rhs.year, rhs.month, rhs.day)
     }
+
+    /// A sortable integer key (`yyyymmdd`) for persistence range queries,
+    /// so day-scoped fetches compare one indexed column instead of three.
+    public var numericKey: Int {
+        year * 10_000 + month * 100 + day
+    }
+
+    public init(numericKey: Int) {
+        self.init(
+            year: numericKey / 10_000,
+            month: (numericKey / 100) % 100,
+            day: numericKey % 100
+        )
+    }
 }

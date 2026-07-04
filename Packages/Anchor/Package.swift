@@ -36,7 +36,8 @@ let package = Package(
         .target(name: "FeatureSettings", dependencies: ["AnchorCore", "AnchorDesign"]),
         .target(name: "FeatureOnboarding", dependencies: ["AnchorCore", "AnchorDesign"]),
         .testTarget(name: "AnchorCoreTests", dependencies: ["AnchorCore"]),
-        .testTarget(name: "AnchorDesignTests", dependencies: ["AnchorDesign", "AnchorCore"])
+        .testTarget(name: "AnchorDesignTests", dependencies: ["AnchorDesign", "AnchorCore"]),
+        .testTarget(name: "AnchorPersistenceTests", dependencies: ["AnchorPersistence", "AnchorCore"])
     ],
     swiftLanguageModes: [.v6]
 )

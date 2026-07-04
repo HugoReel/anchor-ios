@@ -39,6 +39,14 @@ private let lateEveningUTC = Date(timeIntervalSince1970: 1_748_820_600)
     #expect(before.advanced(by: 2, calendar: newYork) == DayDate(year: 2025, month: 3, day: 10))
 }
 
+@Test func numericKeyRoundTrips() {
+    let day = DayDate(year: 2025, month: 6, day: 2)
+    #expect(day.numericKey == 20_250_602)
+    #expect(DayDate(numericKey: day.numericKey) == day)
+    // Ordering by key matches ordering by day.
+    #expect(DayDate(year: 2025, month: 1, day: 31).numericKey < DayDate(year: 2025, month: 2, day: 1).numericKey)
+}
+
 @Test func startDateIsMidnightLocal() {
     let utc = calendar(inZone: "Etc/UTC")
     // 2025-06-01T00:00:00Z
