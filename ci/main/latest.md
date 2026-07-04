@@ -1,19 +1,39 @@
-# CI report — main @ 8af3628b2e91b471612430b79f727f6d37244ac1
+# CI report — main @ 477dc4c8c591b4d3ed6dadbcc77712ca104c21e4
 
-- run: 28710182247 attempt 1
+- run: 28710285184 attempt 1
 - outcome: failure
-- date: 2026-07-04T15:04:19Z
-- url: https://github.com/HugoReel/anchor-ios/actions/runs/28710182247
+- date: 2026-07-04T15:09:00Z
+- url: https://github.com/HugoReel/anchor-ios/actions/runs/28710285184
 
 ## build/lint.log
 
 ### errors and warnings
 ```
-/Users/runner/work/anchor-ios/anchor-ios/Packages/Anchor/Sources/AnchorCore/Rules/EnergyAdvisor.swift:46:1: error: Line Length Violation: Line should be 140 characters or less; currently it has 141 characters (line_length)
-/Users/runner/work/anchor-ios/anchor-ios/Packages/Anchor/Sources/AnchorCore/Rules/WinsEngine.swift:52:1: error: Line Length Violation: Line should be 140 characters or less; currently it has 142 characters (line_length)
-/Users/runner/work/anchor-ios/anchor-ios/Packages/Anchor/Sources/AnchorPersistence/SwiftDataStore.swift:339:1: error: Line Length Violation: Line should be 140 characters or less; currently it has 151 characters (line_length)
-/Users/runner/work/anchor-ios/anchor-ios/Packages/Anchor/Tests/AnchorCoreTests/InMemoryRepositoryTests.swift:137:16: error: Optional Data -> String Conversion Violation: Prefer failable `String(bytes:encoding:)` initializer when converting `Data` to `String` (optional_data_string_conversion)
-/Users/runner/work/anchor-ios/anchor-ios/Packages/Anchor/Tests/AnchorPersistenceTests/RoundTripTests.swift:28:1: error: Line Length Violation: Line should be 140 characters or less; currently it has 179 characters (line_length)
+```
+
+### summary lines
+```
+```
+
+## build/test-packages.log
+
+### errors and warnings
+```
+/Users/runner/work/anchor-ios/anchor-ios/Packages/Anchor/Sources/AnchorPersistence/SwiftDataStore.swift:114:17: error: invalid redeclaration of 'delete(id:)'
+/Users/runner/work/anchor-ios/anchor-ios/Packages/Anchor/Sources/AnchorPersistence/SwiftDataStore.swift:153:17: error: invalid redeclaration of 'delete(id:)'
+/Users/runner/work/anchor-ios/anchor-ios/Packages/Anchor/Sources/AnchorPersistence/SwiftDataStore.swift:350:17: error: invalid redeclaration of 'delete(id:)'
+/Users/runner/work/anchor-ios/anchor-ios/Packages/Anchor/Sources/AnchorPersistence/SwiftDataStore.swift:36:1: error: type 'SwiftDataStore' does not conform to protocol 'DayPlanRepository'
+```
+
+### summary lines
+```
+** TEST FAILED **
+```
+
+## build/coverage.txt
+
+### errors and warnings
+```
 ```
 
 ### summary lines
