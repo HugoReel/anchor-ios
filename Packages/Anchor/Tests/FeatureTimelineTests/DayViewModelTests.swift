@@ -8,6 +8,7 @@ private struct Setup {
     let viewModel: DayViewModel
     let wins: InMemoryWinRepository
     let plans: InMemoryDayPlanRepository
+    let templates: InMemoryTemplateRepository
 }
 
 @MainActor
@@ -57,16 +58,18 @@ private enum Fixture {
         let plans = InMemoryDayPlanRepository()
         try? await plans.upsert(plan)
         let winRepo = InMemoryWinRepository(calendar: calendar)
+        let templateRepo = InMemoryTemplateRepository()
         let prefsRepo = InMemoryPreferencesRepository()
         try? await prefsRepo.save(preferences)
         let viewModel = DayViewModel(
             day: day,
             dayPlans: plans,
+            templates: templateRepo,
             wins: winRepo,
             preferences: prefsRepo,
             dateProvider: FixedDateProvider(now: at(hour, minute), calendar: calendar)
         )
-        return Setup(viewModel: viewModel, wins: winRepo, plans: plans)
+        return Setup(viewModel: viewModel, wins: winRepo, plans: plans, templates: templateRepo)
     }
 }
 
@@ -184,4 +187,144 @@ private enum Fixture {
     #expect(setup.viewModel.plan.block(withID: block.id)?.category == .rest)
     let stored = (try? await setup.plans.plan(for: Fixture.day)) ?? nil
     #expect(stored?.block(withID: block.id)?.category == .rest)
+}
+
+@MainActor
+@Test func upsertBlockAddsNewAndEditsExisting() async {
+    let plan = DayPlan(date: Fixture.day)
+    let setup = await Fixture.setup(plan: plan, at: 8)
+    await setup.viewModel.load()
+
+    let block = Fixture.block("Walk", category: .out, start: 11, minutes: 30, order: 0)
+    await setup.viewModel.upsertBlock(block)
+    #expect(setup.viewModel.blocks.count == 1)
+
+    var edited = block
+    edited.title = "Long walk"
+    await setup.viewModel.upsertBlock(edited)
+
+    #expect(setup.viewModel.blocks.count == 1)
+    #expect(setup.viewModel.blocks.first?.title == "Long walk")
+    let stored = (try? await setup.plans.plan(for: Fixture.day)) ?? nil
+    #expect(stored?.blocks.first?.title == "Long walk")
+}
+
+@MainActor
+@Test func deleteBlockRemovesAndPersists() async {
+    let block = Fixture.block("Focus", start: 9, minutes: 60, order: 0)
+    let plan = DayPlan(date: Fixture.day, blocks: [block])
+    let setup = await Fixture.setup(plan: plan, at: 8)
+    await setup.viewModel.load()
+
+    await setup.viewModel.deleteBlock(id: block.id)
+
+    #expect(setup.viewModel.blocks.isEmpty)
+    let stored = (try? await setup.plans.plan(for: Fixture.day)) ?? nil
+    #expect(stored?.blocks.isEmpty == true)
+}
+
+@MainActor
+@Test func toggleStepMarksAndMintsWin() async {
+    var block = Fixture.block("Pack bag", category: .home, start: 9, minutes: 30, order: 0)
+    let step = BlockStep(title: "Water bottle", orderIndex: 0)
+    block.steps = [step]
+    let plan = DayPlan(date: Fixture.day, blocks: [block])
+    let setup = await Fixture.setup(plan: plan, at: 9)
+    await setup.viewModel.load()
+
+    await setup.viewModel.toggleStep(blockID: block.id, stepID: step.id)
+
+    #expect(setup.viewModel.plan.block(withID: block.id)?.steps.first?.isDone == true)
+    let events = (try? await setup.wins.allEvents()) ?? []
+    #expect(events.first?.kind == .stepDone)
+}
+
+@MainActor
+@Test func markAllStepsDoneCompletesChecklist() async {
+    var block = Fixture.block("Pack bag", category: .home, start: 9, minutes: 30, order: 0)
+    block.steps = [BlockStep(title: "One", orderIndex: 0), BlockStep(title: "Two", orderIndex: 1)]
+    let plan = DayPlan(date: Fixture.day, blocks: [block])
+    let setup = await Fixture.setup(plan: plan, at: 9)
+    await setup.viewModel.load()
+
+    await setup.viewModel.markAllStepsDone(blockID: block.id)
+
+    let steps = setup.viewModel.plan.block(withID: block.id)?.steps ?? []
+    #expect(steps.allSatisfy(\.isDone))
+}
+
+@MainActor
+@Test func applyTemplateCreatesBlocksForDate() async {
+    let plan = DayPlan(date: Fixture.day)
+    let setup = await Fixture.setup(plan: plan, at: 8)
+    await setup.viewModel.load()
+
+    let template = DayTemplate(
+        name: "Gentle morning",
+        mode: .clock,
+        blocks: [
+            TemplateBlock(title: "Stretch", category: .care, startMinutes: 9 * 60, durationMinutes: 30, orderIndex: 0),
+            TemplateBlock(title: "Breakfast", category: .home, orderIndex: 1, stepTitles: ["Tea", "Toast"])
+        ]
+    )
+    await setup.viewModel.applyTemplate(template)
+
+    #expect(setup.viewModel.blocks.count == 2)
+    #expect(setup.viewModel.blocks.first?.startTime == Fixture.at(9))
+    let breakfast = setup.viewModel.plan.blocks.first { $0.title == "Breakfast" }
+    #expect(breakfast?.steps.map(\.title) == ["Tea", "Toast"])
+}
+
+@MainActor
+@Test func saveAsTemplateCapturesBlocks() async {
+    var block = Fixture.block("Stretch", category: .care, start: 9, minutes: 30, order: 0)
+    block.steps = [BlockStep(title: "Mat out", orderIndex: 0)]
+    let plan = DayPlan(date: Fixture.day, blocks: [block])
+    let setup = await Fixture.setup(plan: plan, at: 8)
+    await setup.viewModel.load()
+
+    await setup.viewModel.saveAsTemplate(named: "Morning shape")
+
+    let saved = (try? await setup.templates.allTemplates()) ?? []
+    #expect(saved.count == 1)
+    #expect(saved.first?.name == "Morning shape")
+    #expect(saved.first?.blocks.first?.startMinutes == 9 * 60)
+    #expect(saved.first?.blocks.first?.stepTitles == ["Mat out"])
+}
+
+@MainActor
+@Test func focusSummaryShowsNowNextAndCount() async {
+    let blocks = [
+        Fixture.block("One", start: 9, minutes: 60, order: 0),
+        Fixture.block("Two", start: 10, minutes: 60, order: 1),
+        Fixture.block("Three", start: 12, minutes: 60, order: 2),
+        Fixture.block("Four", start: 14, minutes: 60, order: 3)
+    ]
+    let plan = DayPlan(date: Fixture.day, blocks: blocks)
+    let setup = await Fixture.setup(plan: plan, at: 9, 30)
+    await setup.viewModel.load()
+
+    let summary = setup.viewModel.focusSummary
+
+    #expect(summary.current?.title == "One")
+    #expect(summary.next?.title == "Two")
+    #expect(summary.laterCount == 2)
+}
+
+@MainActor
+@Test func applyBufferOpensGap() async {
+    let deepWork = Fixture.block("Deep work", start: 9, minutes: 60, order: 0)
+    let errands = Fixture.block("Errands", category: .out, start: 10, minutes: 60, order: 1)
+    let plan = DayPlan(date: Fixture.day, blocks: [deepWork, errands])
+    let setup = await Fixture.setup(plan: plan, at: 8)
+    await setup.viewModel.load()
+
+    guard let suggestion = setup.viewModel.bufferSuggestions.first else {
+        Issue.record("expected a buffer suggestion between adjacent long blocks")
+        return
+    }
+    await setup.viewModel.applyBuffer(suggestion)
+
+    #expect(setup.viewModel.plan.block(withID: errands.id)?.startTime == Fixture.at(10, 10))
+    #expect(setup.viewModel.bufferSuggestions.isEmpty)
 }

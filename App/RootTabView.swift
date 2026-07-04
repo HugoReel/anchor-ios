@@ -26,6 +26,7 @@ struct RootTabView: View {
             tab(
                 DayRootView(
                     dayPlans: dependencies.store,
+                    templates: dependencies.store,
                     wins: dependencies.store,
                     preferences: dependencies.store,
                     dateProvider: dependencies.dateProvider

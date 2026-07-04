@@ -10,6 +10,7 @@ public struct DayRootView: View {
     @MainActor
     public init(
         dayPlans: any DayPlanRepository,
+        templates: any TemplateRepository,
         wins: any WinRepository,
         preferences: any PreferencesRepository,
         dateProvider: any DateProviding
@@ -19,6 +20,7 @@ public struct DayRootView: View {
             initialValue: DayViewModel(
                 day: today,
                 dayPlans: dayPlans,
+                templates: templates,
                 wins: wins,
                 preferences: preferences,
                 dateProvider: dateProvider
