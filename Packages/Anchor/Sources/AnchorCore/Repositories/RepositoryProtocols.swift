@@ -1,14 +1,12 @@
 import Foundation
 
+// Method names are aggregate-specific (`allTemplates`, `deleteGoal`) rather
+// than a bare `all()`/`delete(id:)`, so one type (the SwiftData store) can
+// conform to every protocol without signature collisions.
+
 /// One protocol per aggregate. Defined in Core, implemented twice: SwiftData
 /// in AnchorPersistence, in-memory actors here for tests and previews.
 /// Features only ever see these protocols.
-
-// Note: method names are aggregate-specific (`allTemplates`, `deleteGoal`)
-// rather than a bare `all()`/`delete(id:)`. This keeps the names uniform
-// with `allPlans`/`allEvents` and lets one type (the SwiftData store)
-// conform to every protocol without signature collisions.
-
 public protocol DayPlanRepository: Sendable {
     func plan(for day: DayDate) async throws -> DayPlan?
     func plans(in range: ClosedRange<DayDate>) async throws -> [DayPlan]

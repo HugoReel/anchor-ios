@@ -1,8 +1,8 @@
 import Foundation
 
-/// In-memory repository implementations for tests and SwiftUI previews.
-/// Behaviour must stay interchangeable with the SwiftData implementations;
-/// LiveRepositoryTests runs the same assertions against both.
+// In-memory repository implementations for tests and SwiftUI previews.
+// Behaviour must stay interchangeable with the SwiftData implementations;
+// the persistence round-trip tests assert the same behaviour against both.
 
 public actor InMemoryDayPlanRepository: DayPlanRepository {
     private var storage: [UUID: DayPlan] = [:]
