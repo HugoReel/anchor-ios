@@ -41,7 +41,8 @@ let package = Package(
         .testTarget(name: "FeatureTodayTests", dependencies: ["FeatureToday", "AnchorCore"]),
         .testTarget(name: "FeatureTimelineTests", dependencies: ["FeatureTimeline", "AnchorCore"]),
         .testTarget(name: "FeatureGoalsTests", dependencies: ["FeatureGoals", "AnchorCore"]),
-        .testTarget(name: "FeatureReflectTests", dependencies: ["FeatureReflect", "AnchorCore"])
+        .testTarget(name: "FeatureReflectTests", dependencies: ["FeatureReflect", "AnchorCore"]),
+        .testTarget(name: "FeatureCopingTests", dependencies: ["FeatureCoping", "AnchorCore"])
     ],
     swiftLanguageModes: [.v6]
 )

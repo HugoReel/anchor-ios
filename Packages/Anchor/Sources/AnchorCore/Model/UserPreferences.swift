@@ -34,6 +34,9 @@ public struct UserPreferences: Sendable, Hashable, Codable, Identifiable {
     /// it stays gone for that day and returns fresh the next. Optional so it
     /// decodes from older stored payloads.
     public var reflectionNudgeDismissedDayKey: Int?
+    /// Whether the seed coping examples have been inserted once. Optional for
+    /// backward-compatible decoding; nil means not yet seeded.
+    public var copingSeeded: Bool?
     public let createdAt: Date
     public var modifiedAt: Date
 
@@ -62,6 +65,7 @@ public struct UserPreferences: Sendable, Hashable, Codable, Identifiable {
         onboardingComplete: Bool = false,
         seedDataInserted: Bool = false,
         reflectionNudgeDismissedDayKey: Int? = nil,
+        copingSeeded: Bool? = nil,
         createdAt: Date = Date(),
         modifiedAt: Date = Date()
     ) {
@@ -89,6 +93,7 @@ public struct UserPreferences: Sendable, Hashable, Codable, Identifiable {
         self.onboardingComplete = onboardingComplete
         self.seedDataInserted = seedDataInserted
         self.reflectionNudgeDismissedDayKey = reflectionNudgeDismissedDayKey
+        self.copingSeeded = copingSeeded
         self.createdAt = createdAt
         self.modifiedAt = modifiedAt
     }
