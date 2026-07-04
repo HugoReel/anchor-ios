@@ -48,7 +48,12 @@ private enum Fixture {
         )
     }
 
-    static func setup(plan: DayPlan, preferences: UserPreferences = UserPreferences(), at hour: Int) async -> Setup {
+    static func setup(
+        plan: DayPlan,
+        preferences: UserPreferences = UserPreferences(),
+        at hour: Int,
+        _ minute: Int = 0
+    ) async -> Setup {
         let plans = InMemoryDayPlanRepository()
         try? await plans.upsert(plan)
         let winRepo = InMemoryWinRepository(calendar: calendar)
@@ -59,7 +64,7 @@ private enum Fixture {
             dayPlans: plans,
             wins: winRepo,
             preferences: prefsRepo,
-            dateProvider: FixedDateProvider(now: at(hour), calendar: calendar)
+            dateProvider: FixedDateProvider(now: at(hour, minute), calendar: calendar)
         )
         return Setup(viewModel: viewModel, wins: winRepo, plans: plans)
     }
@@ -157,10 +162,10 @@ private enum Fixture {
     let done = Fixture.block("Morning", start: 9, minutes: 50, order: 0, state: .done)
     let upcoming = Fixture.block("Errand", category: .out, start: 10, minutes: 60, order: 1)
     let plan = DayPlan(date: Fixture.day, blocks: [done, upcoming])
-    let setup = await Fixture.setup(plan: plan, at: 10)
+    // Running 20 minutes late: now is 10:20, the upcoming block began at 10:00.
+    let setup = await Fixture.setup(plan: plan, at: 10, 20)
     await setup.viewModel.load()
 
-    // Running 20 minutes late.
     await setup.viewModel.shiftDay()
 
     let moved = setup.viewModel.plan.block(withID: upcoming.id)

@@ -33,6 +33,13 @@ REPORT="$OUT/latest.md"
     echo '```'
     grep -E "(Test Suite|Test run|Executed|tests? passed|tests? failed|BUILD SUCCEEDED|BUILD FAILED|TEST SUCCEEDED|TEST FAILED|Linting|Done linting|violations)" "$f" | tail -60 || true
     echo '```'
+    if grep -qE "(recorded an issue|Expectation failed|✘ Test)" "$f"; then
+      echo ""
+      echo "### test failures"
+      echo '```'
+      grep -E "(recorded an issue|Expectation failed|✘ Test)" "$f" | head -40 || true
+      echo '```'
+    fi
   done
 
   if [ -f build/coverage.txt ]; then
