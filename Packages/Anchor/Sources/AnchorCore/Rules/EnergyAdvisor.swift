@@ -43,7 +43,11 @@ public enum EnergyAdvisor {
         if let longest = remaining.max(by: { ($0.durationMinutes ?? 0) < ($1.durationMinutes ?? 0) }),
            (longest.durationMinutes ?? 0) >= longBlockMinutes {
             result.append(
-                LighteningSuggestion(blockID: longest.id, action: .convertToRest, reason: Copy.convertToRestSuggestion(title: longest.title))
+                LighteningSuggestion(
+                    blockID: longest.id,
+                    action: .convertToRest,
+                    reason: Copy.convertToRestSuggestion(title: longest.title)
+                )
             )
         }
 

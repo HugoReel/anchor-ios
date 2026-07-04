@@ -25,7 +25,14 @@ private func date(_ hour: Int, day: DayDate = baseDay) -> Date {
 
 @Test func dayPlanRoundTrips() async throws {
     let store = try makeStore()
-    let block = TimeBlock(title: "Morning focus", category: .focus, startTime: date(9), durationMinutes: 60, orderIndex: 0, steps: [BlockStep(title: "Open notes", orderIndex: 0)])
+    let block = TimeBlock(
+        title: "Morning focus",
+        category: .focus,
+        startTime: date(9),
+        durationMinutes: 60,
+        orderIndex: 0,
+        steps: [BlockStep(title: "Open notes", orderIndex: 0)]
+    )
     let plan = DayPlan(date: baseDay, mode: .clock, blocks: [block])
 
     try await store.upsert(plan)

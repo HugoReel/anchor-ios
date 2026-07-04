@@ -134,7 +134,7 @@ private let newYork = TestSupport.newYork
     )
 
     let data = try await exporter.exportJSON(now: TestSupport.time(21))
-    let text = String(decoding: data, as: UTF8.self)
+    let text = String(bytes: data, encoding: .utf8) ?? ""
     #expect(text.contains("\"schemaVersion\" : 1"))
     #expect(text.contains("Focus"))
 

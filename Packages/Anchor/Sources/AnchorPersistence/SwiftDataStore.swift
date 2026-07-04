@@ -336,7 +336,12 @@ extension SwiftDataStore: CopingRepository {
             model.modifiedAt = strategy.modifiedAt
         } else {
             modelContext.insert(
-                AnchorSchemaV1.CopingStrategyModel(id: strategy.id, orderIndex: strategy.orderIndex, payload: payload, modifiedAt: strategy.modifiedAt)
+                AnchorSchemaV1.CopingStrategyModel(
+                    id: strategy.id,
+                    orderIndex: strategy.orderIndex,
+                    payload: payload,
+                    modifiedAt: strategy.modifiedAt
+                )
             )
         }
         try save()

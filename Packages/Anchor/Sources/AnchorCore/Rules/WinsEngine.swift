@@ -49,7 +49,14 @@ public enum WinsEngine {
         case .stepDone(let step):
             return WinEvent(date: instant, kind: .stepDone, label: step.title, sourceID: step.id, createdAt: instant, modifiedAt: instant)
         case .goalStepDone(let step):
-            return WinEvent(date: instant, kind: .goalStepDone, label: step.title, sourceID: step.id, createdAt: instant, modifiedAt: instant)
+            return WinEvent(
+                date: instant,
+                kind: .goalStepDone,
+                label: step.title,
+                sourceID: step.id,
+                createdAt: instant,
+                modifiedAt: instant
+            )
         case .checkIn:
             return WinEvent(date: instant, kind: .checkIn, createdAt: instant, modifiedAt: instant)
         case .journal:

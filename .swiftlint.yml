@@ -23,6 +23,14 @@ line_length:
 identifier_name:
   min_length: 2
 
+# Dependency-injection initializers (e.g. the data exporter) legitimately
+# take one parameter per collaborator. Keep the rule for genuinely excessive
+# cases; default-valued params are already ignored.
+function_parameter_count:
+  warning: 10
+  error: 14
+  ignores_default_parameters: true
+
 type_body_length:
   warning: 350
   error: 500
