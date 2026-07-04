@@ -29,7 +29,7 @@ public actor InMemoryDayPlanRepository: DayPlanRepository {
         storage[plan.id] = plan
     }
 
-    public func delete(id: UUID) async throws {
+    public func deletePlan(id: UUID) async throws {
         storage[id] = nil
     }
 }
@@ -39,7 +39,7 @@ public actor InMemoryTemplateRepository: TemplateRepository {
 
     public init() {}
 
-    public func all() async throws -> [DayTemplate] {
+    public func allTemplates() async throws -> [DayTemplate] {
         storage.values.sorted { $0.name < $1.name }
     }
 
@@ -47,7 +47,7 @@ public actor InMemoryTemplateRepository: TemplateRepository {
         storage[template.id] = template
     }
 
-    public func delete(id: UUID) async throws {
+    public func deleteTemplate(id: UUID) async throws {
         storage[id] = nil
     }
 }
@@ -57,7 +57,7 @@ public actor InMemoryGoalRepository: GoalRepository {
 
     public init() {}
 
-    public func all(includeArchived: Bool) async throws -> [Goal] {
+    public func allGoals(includeArchived: Bool) async throws -> [Goal] {
         storage.values
             .filter { includeArchived || !$0.isArchived }
             .sorted { $0.createdAt < $1.createdAt }
@@ -67,7 +67,7 @@ public actor InMemoryGoalRepository: GoalRepository {
         storage[goal.id] = goal
     }
 
-    public func delete(id: UUID) async throws {
+    public func deleteGoal(id: UUID) async throws {
         storage[id] = nil
     }
 }
@@ -127,7 +127,7 @@ public actor InMemoryEnergyRepository: EnergyRepository {
         storage.values.first { $0.day == day }
     }
 
-    public func all() async throws -> [EnergyCheckIn] {
+    public func allEnergyCheckIns() async throws -> [EnergyCheckIn] {
         storage.values.sorted { $0.day < $1.day }
     }
 
@@ -168,7 +168,7 @@ public actor InMemoryCopingRepository: CopingRepository {
 
     public init() {}
 
-    public func all() async throws -> [CopingStrategy] {
+    public func allCoping() async throws -> [CopingStrategy] {
         storage.values.sorted { $0.orderIndex < $1.orderIndex }
     }
 
@@ -176,7 +176,7 @@ public actor InMemoryCopingRepository: CopingRepository {
         storage[strategy.id] = strategy
     }
 
-    public func delete(id: UUID) async throws {
+    public func deleteCoping(id: UUID) async throws {
         storage[id] = nil
     }
 }

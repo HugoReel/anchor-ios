@@ -48,7 +48,7 @@ private let newYork = TestSupport.newYork
     try await repo.upsert(EnergyCheckIn(day: day, level: 2))
     try await repo.upsert(EnergyCheckIn(day: day, level: 4))
 
-    let all = try await repo.all()
+    let all = try await repo.allEnergyCheckIns()
     #expect(all.count == 1)
     #expect(all.first?.level == 4)
 }
@@ -78,8 +78,8 @@ private let newYork = TestSupport.newYork
     try await repo.upsert(Goal(title: "Active"))
     try await repo.upsert(Goal(title: "Archived", isArchived: true))
 
-    let visible = try await repo.all(includeArchived: false)
-    let everything = try await repo.all(includeArchived: true)
+    let visible = try await repo.allGoals(includeArchived: false)
+    let everything = try await repo.allGoals(includeArchived: true)
     #expect(visible.count == 1)
     #expect(everything.count == 2)
 }

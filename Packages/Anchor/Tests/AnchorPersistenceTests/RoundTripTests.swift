@@ -72,7 +72,7 @@ private func date(_ hour: Int, day: DayDate = baseDay) -> Date {
     let goal = Goal(title: "Write the thing", steps: [step])
 
     try await store.upsert(goal)
-    let fetched = try await store.all(includeArchived: false)
+    let fetched = try await store.allGoals(includeArchived: false)
 
     #expect(fetched.count == 1)
     #expect(fetched.first?.steps.first?.ifThenPlans.first?.triggerMinutes == 9 * 60)
@@ -83,8 +83,8 @@ private func date(_ hour: Int, day: DayDate = baseDay) -> Date {
     try await store.upsert(Goal(title: "Active"))
     try await store.upsert(Goal(title: "Done with", isArchived: true))
 
-    #expect(try await store.all(includeArchived: false).count == 1)
-    #expect(try await store.all(includeArchived: true).count == 2)
+    #expect(try await store.allGoals(includeArchived: false).count == 1)
+    #expect(try await store.allGoals(includeArchived: true).count == 2)
 }
 
 @Test func winsAppendOnlyInStore() async throws {
@@ -100,7 +100,7 @@ private func date(_ hour: Int, day: DayDate = baseDay) -> Date {
     try await store.upsert(EnergyCheckIn(day: baseDay, level: 2))
     try await store.upsert(EnergyCheckIn(day: baseDay, level: 5))
 
-    let all = try await store.all()
+    let all = try await store.allEnergyCheckIns()
     #expect(all.count == 1)
     #expect(all.first?.level == 5)
 }
@@ -135,6 +135,6 @@ private func date(_ hour: Int, day: DayDate = baseDay) -> Date {
     try await store.wipeAll()
 
     #expect(try await store.allPlans().isEmpty)
-    #expect(try await store.all(includeArchived: true).isEmpty)
+    #expect(try await store.allGoals(includeArchived: true).isEmpty)
     #expect(try await store.allEvents().isEmpty)
 }

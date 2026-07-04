@@ -81,7 +81,7 @@ extension SwiftDataStore: DayPlanRepository {
         try save()
     }
 
-    public func delete(id: UUID) async throws {
+    public func deletePlan(id: UUID) async throws {
         try modelContext.delete(model: AnchorSchemaV1.DayPlanModel.self, where: #Predicate { $0.id == id })
         try save()
     }
@@ -90,7 +90,7 @@ extension SwiftDataStore: DayPlanRepository {
 // MARK: - TemplateRepository
 
 extension SwiftDataStore: TemplateRepository {
-    public func all() async throws -> [DayTemplate] {
+    public func allTemplates() async throws -> [DayTemplate] {
         let descriptor = FetchDescriptor<AnchorSchemaV1.DayTemplateModel>(sortBy: [SortDescriptor(\.name)])
         return try modelContext.fetch(descriptor).map { try PayloadCoder.decode(DayTemplate.self, from: $0.payload) }
     }
@@ -111,7 +111,7 @@ extension SwiftDataStore: TemplateRepository {
         try save()
     }
 
-    public func delete(id: UUID) async throws {
+    public func deleteTemplate(id: UUID) async throws {
         try modelContext.delete(model: AnchorSchemaV1.DayTemplateModel.self, where: #Predicate { $0.id == id })
         try save()
     }
@@ -120,7 +120,7 @@ extension SwiftDataStore: TemplateRepository {
 // MARK: - GoalRepository
 
 extension SwiftDataStore: GoalRepository {
-    public func all(includeArchived: Bool) async throws -> [Goal] {
+    public func allGoals(includeArchived: Bool) async throws -> [Goal] {
         let descriptor = FetchDescriptor<AnchorSchemaV1.GoalModel>(
             predicate: includeArchived ? nil : #Predicate { $0.isArchived == false },
             sortBy: [SortDescriptor(\.createdAt)]
@@ -150,7 +150,7 @@ extension SwiftDataStore: GoalRepository {
         try save()
     }
 
-    public func delete(id: UUID) async throws {
+    public func deleteGoal(id: UUID) async throws {
         try modelContext.delete(model: AnchorSchemaV1.GoalModel.self, where: #Predicate { $0.id == id })
         try save()
     }
@@ -257,7 +257,7 @@ extension SwiftDataStore: EnergyRepository {
         return try PayloadCoder.decode(EnergyCheckIn.self, from: model.payload)
     }
 
-    public func all() async throws -> [EnergyCheckIn] {
+    public func allEnergyCheckIns() async throws -> [EnergyCheckIn] {
         let descriptor = FetchDescriptor<AnchorSchemaV1.EnergyCheckInModel>(sortBy: [SortDescriptor(\.dayKey)])
         return try modelContext.fetch(descriptor).map { try PayloadCoder.decode(EnergyCheckIn.self, from: $0.payload) }
     }
@@ -321,7 +321,7 @@ extension SwiftDataStore: WinRepository {
 // MARK: - CopingRepository
 
 extension SwiftDataStore: CopingRepository {
-    public func all() async throws -> [CopingStrategy] {
+    public func allCoping() async throws -> [CopingStrategy] {
         let descriptor = FetchDescriptor<AnchorSchemaV1.CopingStrategyModel>(sortBy: [SortDescriptor(\.orderIndex)])
         return try modelContext.fetch(descriptor).map { try PayloadCoder.decode(CopingStrategy.self, from: $0.payload) }
     }
@@ -347,7 +347,7 @@ extension SwiftDataStore: CopingRepository {
         try save()
     }
 
-    public func delete(id: UUID) async throws {
+    public func deleteCoping(id: UUID) async throws {
         try modelContext.delete(model: AnchorSchemaV1.CopingStrategyModel.self, where: #Predicate { $0.id == id })
         try save()
     }

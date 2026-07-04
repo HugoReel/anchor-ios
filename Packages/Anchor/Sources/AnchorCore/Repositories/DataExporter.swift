@@ -52,13 +52,13 @@ public struct DataExporter: Sendable {
             exportedAt: now,
             schemaVersion: 1,
             dayPlans: try await dayPlans.allPlans(),
-            templates: try await templates.all(),
-            goals: try await goals.all(includeArchived: true),
+            templates: try await templates.allTemplates(),
+            goals: try await goals.allGoals(includeArchived: true),
             moodCheckIns: try await reflections.allCheckIns(),
             journalEntries: try await reflections.allJournalEntries(),
-            energyCheckIns: try await energy.all(),
+            energyCheckIns: try await energy.allEnergyCheckIns(),
             winEvents: try await wins.allEvents(),
-            copingStrategies: try await coping.all(),
+            copingStrategies: try await coping.allCoping(),
             preferences: try await preferences.load()
         )
         let encoder = JSONEncoder()

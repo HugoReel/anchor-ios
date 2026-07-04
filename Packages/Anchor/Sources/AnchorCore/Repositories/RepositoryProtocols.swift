@@ -4,24 +4,29 @@ import Foundation
 /// in AnchorPersistence, in-memory actors here for tests and previews.
 /// Features only ever see these protocols.
 
+// Note: method names are aggregate-specific (`allTemplates`, `deleteGoal`)
+// rather than a bare `all()`/`delete(id:)`. This keeps the names uniform
+// with `allPlans`/`allEvents` and lets one type (the SwiftData store)
+// conform to every protocol without signature collisions.
+
 public protocol DayPlanRepository: Sendable {
     func plan(for day: DayDate) async throws -> DayPlan?
     func plans(in range: ClosedRange<DayDate>) async throws -> [DayPlan]
     func allPlans() async throws -> [DayPlan]
     func upsert(_ plan: DayPlan) async throws
-    func delete(id: UUID) async throws
+    func deletePlan(id: UUID) async throws
 }
 
 public protocol TemplateRepository: Sendable {
-    func all() async throws -> [DayTemplate]
+    func allTemplates() async throws -> [DayTemplate]
     func upsert(_ template: DayTemplate) async throws
-    func delete(id: UUID) async throws
+    func deleteTemplate(id: UUID) async throws
 }
 
 public protocol GoalRepository: Sendable {
-    func all(includeArchived: Bool) async throws -> [Goal]
+    func allGoals(includeArchived: Bool) async throws -> [Goal]
     func upsert(_ goal: Goal) async throws
-    func delete(id: UUID) async throws
+    func deleteGoal(id: UUID) async throws
 }
 
 public protocol ReflectionRepository: Sendable {
@@ -37,7 +42,7 @@ public protocol ReflectionRepository: Sendable {
 
 public protocol EnergyRepository: Sendable {
     func checkIn(for day: DayDate) async throws -> EnergyCheckIn?
-    func all() async throws -> [EnergyCheckIn]
+    func allEnergyCheckIns() async throws -> [EnergyCheckIn]
     func upsert(_ checkIn: EnergyCheckIn) async throws
 }
 
@@ -49,9 +54,9 @@ public protocol WinRepository: Sendable {
 }
 
 public protocol CopingRepository: Sendable {
-    func all() async throws -> [CopingStrategy]
+    func allCoping() async throws -> [CopingStrategy]
     func upsert(_ strategy: CopingStrategy) async throws
-    func delete(id: UUID) async throws
+    func deleteCoping(id: UUID) async throws
 }
 
 public protocol PreferencesRepository: Sendable {
