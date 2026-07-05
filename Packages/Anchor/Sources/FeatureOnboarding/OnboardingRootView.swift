@@ -9,7 +9,7 @@ public struct OnboardingRootView: View {
     @Environment(\.anchorTheme) private var theme
     @State private var viewModel: OnboardingViewModel
     @State private var page = 0
-    private let onComplete: @Sendable () -> Void
+    private let onComplete: () -> Void
 
     private let lastPage = 2
 
@@ -17,7 +17,7 @@ public struct OnboardingRootView: View {
     public init(
         preferences: any PreferencesRepository,
         dateProvider: any DateProviding,
-        onComplete: @escaping @Sendable () -> Void
+        onComplete: @escaping () -> Void
     ) {
         _viewModel = State(initialValue: OnboardingViewModel(preferences: preferences, dateProvider: dateProvider))
         self.onComplete = onComplete
@@ -27,7 +27,7 @@ public struct OnboardingRootView: View {
         VStack(spacing: Spacing.lg) {
             HStack {
                 Spacer()
-                Button("Skip") { finish(saveAnswers: false) }
+                Button("Skip") { Task { await viewModel.skip() } }
                     .foregroundStyle(theme.textSecondary.color)
             }
             TabView(selection: $page) {
@@ -41,6 +41,9 @@ public struct OnboardingRootView: View {
         .padding(Spacing.lg)
         .background(theme.background.color)
         .task { await viewModel.load() }
+        .onChange(of: viewModel.isComplete) { _, isComplete in
+            if isComplete { onComplete() }
+        }
     }
 
     // MARK: - Pages
@@ -95,7 +98,7 @@ public struct OnboardingRootView: View {
             if page < lastPage {
                 withAnimation { page += 1 }
             } else {
-                finish(saveAnswers: true)
+                Task { await viewModel.complete() }
             }
         } label: {
             Text(page < lastPage ? "Next" : "Get started")
@@ -107,19 +110,6 @@ public struct OnboardingRootView: View {
     }
 
     // MARK: - Actions
-
-    private func finish(saveAnswers: Bool) {
-        let callback = onComplete
-        let model = viewModel
-        Task { @MainActor in
-            if saveAnswers {
-                await model.complete()
-            } else {
-                await model.skip()
-            }
-            callback()
-        }
-    }
 
     private var themeBinding: Binding<ThemeChoice> {
         Binding(get: { viewModel.theme }, set: { viewModel.theme = $0 })
