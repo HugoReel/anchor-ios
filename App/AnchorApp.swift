@@ -6,7 +6,7 @@ struct AnchorApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootTabView(dependencies: dependencies)
+            AppRootView(dependencies: dependencies)
         }
     }
 }
