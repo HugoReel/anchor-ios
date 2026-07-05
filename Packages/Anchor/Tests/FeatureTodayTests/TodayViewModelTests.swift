@@ -285,3 +285,39 @@ private func makeHarness(
     let counts = harness.viewModel.winsSummaries.map(\.count)
     #expect(counts.allSatisfy { $0 > 0 })
 }
+
+/// A clock whose `now` can be moved forward, for the midnight-rollover test.
+private final class MutableDateProvider: DateProviding, @unchecked Sendable {
+    var now: Date
+    let calendar: Calendar
+
+    init(now: Date, calendar: Calendar) {
+        self.now = now
+        self.calendar = calendar
+    }
+}
+
+@MainActor
+@Test func todayRefreshesWhenDayRollsOverPastMidnight() async {
+    let provider = MutableDateProvider(now: Fixture.at(23, 50), calendar: Fixture.calendar)
+    let viewModel = TodayViewModel(
+        dayPlans: InMemoryDayPlanRepository(),
+        energy: InMemoryEnergyRepository(),
+        wins: InMemoryWinRepository(calendar: Fixture.calendar),
+        preferences: InMemoryPreferencesRepository(),
+        dateProvider: provider
+    )
+
+    await viewModel.load()
+    #expect(viewModel.loadedDay == Fixture.day)
+
+    // Same day, ten minutes later: no reload needed.
+    provider.now = Fixture.at(23, 55)
+    await viewModel.refreshIfDayChanged()
+    #expect(viewModel.loadedDay == Fixture.day)
+
+    // Twenty minutes past 23:50 is 00:10 the next day — it should reload.
+    provider.now = Fixture.at(23, 50).addingTimeInterval(20 * 60)
+    await viewModel.refreshIfDayChanged()
+    #expect(viewModel.loadedDay == Fixture.day.advanced(by: 1, calendar: Fixture.calendar))
+}

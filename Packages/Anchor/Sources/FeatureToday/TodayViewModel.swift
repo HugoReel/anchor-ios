@@ -25,6 +25,9 @@ public final class TodayViewModel {
     public private(set) var lighteningSuggestions: [LighteningSuggestion] = []
     public private(set) var showReflectionNudge: Bool = false
     public private(set) var loadFailed: Bool = false
+    /// The day the current state was loaded for, so a rollover past midnight
+    /// while the app is open can be detected and refreshed.
+    public private(set) var loadedDay: DayDate?
 
     private let dayPlans: any DayPlanRepository
     private let energy: any EnergyRepository
@@ -86,9 +89,19 @@ public final class TodayViewModel {
             showReflectionNudge = !presentation.invitational
                 && prefs.reflectionNudgeDismissedDayKey != today.numericKey
 
+            loadedDay = today
             await notifications?.refreshTransitionWarnings(for: plan)
         } catch {
             loadFailed = true
+        }
+    }
+
+    /// Reloads if the calendar day has changed since the last load — the day
+    /// rolling over past midnight while the app stays open. A no-op otherwise.
+    public func refreshIfDayChanged() async {
+        let current = DayDate(date: dateProvider.now, calendar: dateProvider.calendar)
+        if current != loadedDay {
+            await load()
         }
     }
 
