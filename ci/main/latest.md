@@ -1,15 +1,15 @@
-# CI report — main @ 14199d4a5281e1b549c899876be3d0663a45de1c
+# CI report — main @ 8eeeb67293992e5dd80286766d8dd6a0161ca65c
 
-- run: 28719931397 attempt 1
+- run: 28733598235 attempt 1
 - outcome: failure
-- date: 2026-07-04T21:18:04Z
-- url: https://github.com/HugoReel/anchor-ios/actions/runs/28719931397
+- date: 2026-07-05T07:39:05Z
+- url: https://github.com/HugoReel/anchor-ios/actions/runs/28733598235
 
 ## build/lint.log
 
 ### errors and warnings
 ```
-/Users/runner/work/anchor-ios/anchor-ios/Packages/Anchor/Sources/AnchorCore/Model/CopingSeeds.swift:7:22: error: Large Tuple Violation: Tuples should have at most 2 members (large_tuple)
+/Users/runner/work/anchor-ios/anchor-ios/Packages/Anchor/Sources/AnchorCore/Model/CopingSeeds.swift:15:1: error: Line Length Violation: Line should be 140 characters or less; currently it has 142 characters (line_length)
 ```
 
 ### summary lines
