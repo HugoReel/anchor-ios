@@ -3,7 +3,7 @@ SHELL := /bin/bash
 SIM_NAME ?= iPhone 16
 DEST := platform=iOS Simulator,name=$(SIM_NAME)
 
-.PHONY: project build test test-packages lint ci
+.PHONY: project build test test-packages uitest lint ci
 
 project:
 	xcodegen generate
@@ -29,6 +29,12 @@ build: project
 	  -destination '$(DEST)' CODE_SIGNING_ALLOWED=NO \
 	  SWIFT_TREAT_WARNINGS_AS_ERRORS=YES 2>&1 | tee build/app-build.log
 
+uitest: project
+	@mkdir -p build
+	set -o pipefail; xcodebuild test -scheme Anchor -project Anchor.xcodeproj \
+	  -destination '$(DEST)' CODE_SIGNING_ALLOWED=NO \
+	  -only-testing:AnchorUITests 2>&1 | tee build/app-uitest.log
+
 test: test-packages
 
-ci: lint test-packages build
+ci: lint test-packages build uitest

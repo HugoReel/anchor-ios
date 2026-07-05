@@ -61,6 +61,10 @@ jobs:
         if: ${{ hashFiles('project.yml') != '' }}
         run: make build SIM_NAME="${{ steps.sim.outputs.name }}"
 
+      - name: App UI tests
+        if: ${{ hashFiles('project.yml') != '' }}
+        run: make uitest SIM_NAME="${{ steps.sim.outputs.name }}"
+
       - name: Publish ci-logs
         if: always()
         env:

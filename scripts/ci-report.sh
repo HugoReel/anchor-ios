@@ -19,7 +19,7 @@ REPORT="$OUT/latest.md"
   echo "- date: $(date -u +%FT%TZ)"
   echo "- url: ${GITHUB_SERVER_URL:-https://github.com}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID:-0}"
 
-  for f in build/lint.log build/test-packages.log build/app-build.log; do
+  for f in build/lint.log build/test-packages.log build/app-build.log build/app-uitest.log; do
     [ -f "$f" ] || continue
     echo ""
     echo "## ${f}"

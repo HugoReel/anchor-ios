@@ -50,8 +50,24 @@ targets:
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
         ITSAppUsesNonExemptEncryption: false
+  AnchorUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: AnchorUITests
+    dependencies:
+      - target: Anchor
+    settings:
+      base:
+        SWIFT_VERSION: "6.0"
+        TARGETED_DEVICE_FAMILY: "1"
+        TEST_TARGET_NAME: Anchor
 schemes:
   Anchor:
     build:
       targets:
         Anchor: all
+        AnchorUITests: [test]
+    test:
+      targets:
+        - AnchorUITests
