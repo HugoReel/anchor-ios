@@ -1,9 +1,9 @@
-# CI report — main @ 0fd3d620ee3439d33b5e9a7fbf9e2776b0fdf9ad
+# CI report — main @ 3ecd60b35c3cd39eb0be2617204010ab85b487e9
 
-- run: 28736076588 attempt 1
+- run: 28736672934 attempt 1
 - outcome: success
-- date: 2026-07-05T09:24:27Z
-- url: https://github.com/HugoReel/anchor-ios/actions/runs/28736076588
+- date: 2026-07-05T09:48:46Z
+- url: https://github.com/HugoReel/anchor-ios/actions/runs/28736672934
 
 ## build/lint.log
 
@@ -23,56 +23,56 @@
 
 ### summary lines
 ```
-Test Suite 'All tests' started at 2026-07-05 09:23:03.339.
-Test Suite 'All tests' passed at 2026-07-05 09:23:03.339.
+Test Suite 'All tests' started at 2026-07-05 09:47:18.556.
+Test Suite 'All tests' passed at 2026-07-05 09:47:18.556.
 	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
 ◇ Test run started.
-✔ Test run with 95 tests passed after 0.164 seconds.
-Test Suite 'All tests' started at 2026-07-05 09:23:04.719.
-Test Suite 'All tests' passed at 2026-07-05 09:23:04.719.
-	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
-◇ Test run started.
-✔ Test run with 8 tests passed after 0.022 seconds.
-Test Suite 'All tests' started at 2026-07-05 09:23:05.748.
-Test Suite 'All tests' passed at 2026-07-05 09:23:05.749.
-	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
-◇ Test run started.
-✔ Test run with 13 tests passed after 0.110 seconds.
-Test Suite 'All tests' started at 2026-07-05 09:23:06.747.
-Test Suite 'All tests' passed at 2026-07-05 09:23:06.748.
+✔ Test run with 95 tests passed after 0.124 seconds.
+Test Suite 'All tests' started at 2026-07-05 09:47:20.335.
+Test Suite 'All tests' passed at 2026-07-05 09:47:20.335.
 	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+✔ Test run with 8 tests passed after 0.018 seconds.
+Test Suite 'All tests' started at 2026-07-05 09:47:21.301.
+Test Suite 'All tests' passed at 2026-07-05 09:47:21.301.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+◇ Test run started.
+✔ Test run with 13 tests passed after 0.100 seconds.
+Test Suite 'All tests' started at 2026-07-05 09:47:22.318.
+Test Suite 'All tests' passed at 2026-07-05 09:47:22.318.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
 ◇ Test run started.
 ✔ Test run with 7 tests passed after 0.005 seconds.
-Test Suite 'All tests' started at 2026-07-05 09:23:17.341.
-Test Suite 'All tests' passed at 2026-07-05 09:23:17.342.
-	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
-◇ Test run started.
-✔ Test run with 9 tests passed after 1.008 seconds.
-Test Suite 'All tests' started at 2026-07-05 09:23:31.399.
-Test Suite 'All tests' passed at 2026-07-05 09:23:31.399.
+Test Suite 'All tests' started at 2026-07-05 09:47:23.079.
+Test Suite 'All tests' passed at 2026-07-05 09:47:23.080.
 	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
 ◇ Test run started.
-✔ Test run with 3 tests passed after 0.011 seconds.
-Test Suite 'All tests' started at 2026-07-05 09:23:33.152.
-Test Suite 'All tests' passed at 2026-07-05 09:23:33.153.
-	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
-◇ Test run started.
-✔ Test run with 10 tests passed after 0.007 seconds.
-Test Suite 'All tests' started at 2026-07-05 09:23:35.855.
-Test Suite 'All tests' passed at 2026-07-05 09:23:35.856.
+✔ Test run with 9 tests passed after 0.006 seconds.
+Test Suite 'All tests' started at 2026-07-05 09:47:34.164.
+Test Suite 'All tests' passed at 2026-07-05 09:47:34.165.
 	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
 ◇ Test run started.
-✔ Test run with 4 tests passed after 0.025 seconds.
-Test Suite 'All tests' started at 2026-07-05 09:23:39.445.
-Test Suite 'All tests' passed at 2026-07-05 09:23:39.445.
+✔ Test run with 3 tests passed after 0.006 seconds.
+Test Suite 'All tests' started at 2026-07-05 09:47:43.999.
+Test Suite 'All tests' passed at 2026-07-05 09:47:44.000.
 	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
 ◇ Test run started.
-✔ Test run with 16 tests passed after 0.835 seconds.
-Test Suite 'All tests' started at 2026-07-05 09:23:44.333.
-Test Suite 'All tests' passed at 2026-07-05 09:23:44.333.
+✔ Test run with 10 tests passed after 0.904 seconds.
+Test Suite 'All tests' started at 2026-07-05 09:47:56.234.
+Test Suite 'All tests' passed at 2026-07-05 09:47:56.234.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+✔ Test run with 4 tests passed after 0.036 seconds.
+Test Suite 'All tests' started at 2026-07-05 09:47:58.154.
+Test Suite 'All tests' passed at 2026-07-05 09:47:58.156.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.002) seconds
+◇ Test run started.
+✔ Test run with 16 tests passed after 0.011 seconds.
+Test Suite 'All tests' started at 2026-07-05 09:48:01.556.
+Test Suite 'All tests' passed at 2026-07-05 09:48:01.556.
 	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
 ◇ Test run started.
-✔ Test run with 13 tests passed after 0.012 seconds.
+✔ Test run with 13 tests passed after 0.027 seconds.
 ** TEST SUCCEEDED **
 ```
 
@@ -91,26 +91,26 @@ Test Suite 'All tests' passed at 2026-07-05 09:23:44.333.
 ```
 ID Name                   # Source Files Coverage           
 -- ---------------------- -------------- ------------------ 
-0  AnchorCore             36             91.57% (1173/1281) 
-1  AnchorCoreTests        53             95.09% (2307/2426) 
+0  AnchorCore             36             91.60% (1177/1285) 
+1  AnchorCoreTests        53             95.10% (2311/2430) 
 2  AnchorDesign           9              49.59% (121/244)   
-3  AnchorDesignTests      48             85.79% (1395/1626) 
+3  AnchorDesignTests      48             85.83% (1399/1630) 
 4  AnchorPersistence      5              67.20% (295/439)   
-5  AnchorPersistenceTests 43             86.32% (1615/1871) 
+5  AnchorPersistenceTests 43             86.35% (1619/1875) 
 6  AnchorPlatform         0              0.00% (0/0)        
 7  FeatureCoping          4              11.18% (58/519)    
-8  FeatureCopingTests     41             69.85% (1323/1894) 
+8  FeatureCopingTests     41             69.92% (1327/1898) 
 9  FeatureGoals           6              10.36% (92/888)    
-10 FeatureGoalsTests      43             60.49% (1393/2303) 
+10 FeatureGoalsTests      43             60.55% (1397/2307) 
 11 FeatureOnboarding      2              14.94% (36/241)    
-12 FeatureOnboardingTests 48             75.94% (1376/1812) 
+12 FeatureOnboardingTests 48             75.99% (1380/1816) 
 13 FeatureReflect         7              12.35% (169/1368)  
-14 FeatureReflectTests    44             53.00% (1484/2800) 
-15 FeatureSettings        3              15.92% (64/402)    
-16 FeatureSettingsTests   49             71.42% (1422/1991) 
+14 FeatureReflectTests    44             53.07% (1488/2804) 
+15 FeatureSettings        3              12.98% (68/524)    
+16 FeatureSettingsTests   49             67.55% (1430/2117) 
 17 FeatureTimeline        8              12.85% (249/1938)  
-18 FeatureTimelineTests   45             48.27% (1691/3503) 
-19 FeatureToday           3              18.24% (137/751)   
-20 FeatureTodayTests      40             67.74% (1529/2257) 
+18 FeatureTimelineTests   45             48.33% (1695/3507) 
+19 FeatureToday           3              18.54% (140/755)   
+20 FeatureTodayTests      40             67.81% (1536/2265) 
 
 ```
