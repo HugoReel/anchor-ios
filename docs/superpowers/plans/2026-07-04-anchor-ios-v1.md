@@ -560,7 +560,10 @@ Phase gate: CI green; final-phase review checklist appended to DECISIONS.md; scr
 - [x] **Task 4.2 — DONE + green (run 3ecd60b):** new `notificationsEnabled` pref + `NotificationCoordinator` (AnchorCore; 4 tests: schedulingOnlyAfterAuthorization, permanentOffCancelsEverything, planChangeReschedulesWarnings, noSchedulingWhileLowDemand). Wired: `AppDependencies.notifications`, Settings Reminders toggle + pre-permission explainer sheet, Today refreshes transition warnings on every load. Coordinator injected as an **optional** dependency so existing VM tests are untouched.
 - **Task 4.1:** `AnchorPlatform/NotificationScheduling.swift` (`protocol NotificationScheduling: Sendable { func requestAuthorization() async throws -> Bool; func schedule(_ n: [PlannedNotification]) async throws; func cancelAll() async; func pending() async -> [String] }`) + `UNUserNotificationCenter` adapter + `RecordingNotificationScheduler` test double in AnchorCore tests support.
 - **Task 4.2:** wiring — Today VM schedules transition warnings from `NotificationPlanner` output on plan changes; Reflect reminders from Settings; gentle pre-permission explainer sheet (system prompt only after explicit "Turn on reminders"); quiet hours; permanent-off cancels + persists. Tests: `schedulingOnlyAfterAuthorization`, `permanentOffCancelsEverything`, `planChangeReschedulesWarnings`, `noSchedulingWhileLowDemand`.
+- [x] **Task 4.3 — DONE + green (run c7a02ac):** `AnchorUITests/LaunchFlowTests` (XcodeGen `bundle.ui-testing` target, scheme test action) launches the app, skips onboarding, asserts the four tabs, opens the coping bank — passed on the macOS-runner simulator in ~54s. `make uitest` runs in a new CI step after the app build; ci-report scans `app-uitest.log`.
 - **Task 4.3:** XCUITest smoke (`AnchorUITests/LaunchFlowTests.swift`): app launches, four tabs present, can open coping bank in two taps. Runs in app-build job via test plan. Phase gate: CI green.
+
+**Phase 4 complete and green (run c7a02ac). Next: Phase 5 — accessibility and sensory audit.**
 
 ## Phase 5 — Accessibility and sensory audit
 
