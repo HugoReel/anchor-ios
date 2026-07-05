@@ -7,6 +7,7 @@ import AnchorDesign
 /// written `onboardingComplete`.
 public struct OnboardingRootView: View {
     @Environment(\.anchorTheme) private var theme
+    @Environment(\.anchorMotion) private var motion
     @State private var viewModel: OnboardingViewModel
     @State private var page = 0
     private let onComplete: () -> Void
@@ -96,7 +97,7 @@ public struct OnboardingRootView: View {
     private var primaryButton: some View {
         Button {
             if page < lastPage {
-                withAnimation { page += 1 }
+                withAnimation(AnchorMotion.animation(for: motion)) { page += 1 }
             } else {
                 Task { await viewModel.complete() }
             }

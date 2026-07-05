@@ -14,6 +14,7 @@ import FeatureSettings
 struct RootTabView: View {
     let dependencies: AppDependencies
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var showCoping = false
     @State private var chrome: AppChromeModel
 
@@ -76,6 +77,7 @@ struct RootTabView: View {
             )
         }
         .environment(\.anchorTheme, chrome.theme)
+        .environment(\.anchorMotion, AnchorMotion.effective(user: chrome.userMotion, systemReduceMotion: reduceMotion))
         .task { await chrome.reload() }
     }
 

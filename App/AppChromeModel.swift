@@ -8,6 +8,9 @@ import Observation
 @Observable
 final class AppChromeModel {
     private(set) var theme: AnchorTheme = .calm
+    /// The user's chosen motion level, before combining with system Reduce
+    /// Motion. Views receive the combined value via the environment.
+    private(set) var userMotion: MotionLevel = .full
 
     private let preferences: any PreferencesRepository
 
@@ -19,5 +22,6 @@ final class AppChromeModel {
         guard let prefs = try? await preferences.load() else { return }
         let choice = ThemeChoice(rawValue: prefs.themeRawValue) ?? .calm
         theme = AnchorTheme.theme(for: choice)
+        userMotion = MotionLevel(rawValue: prefs.motionRawValue) ?? .full
     }
 }

@@ -1,5 +1,6 @@
 import SwiftUI
 import AnchorCore
+import AnchorDesign
 import FeatureOnboarding
 
 /// Decides between the first-run flow and the main app. Reads
@@ -8,6 +9,7 @@ import FeatureOnboarding
 struct AppRootView: View {
     let dependencies: AppDependencies
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// nil while the preference is still loading.
     @State private var onboardingComplete: Bool?
 
@@ -22,6 +24,8 @@ struct AppRootView: View {
                     dateProvider: dependencies.dateProvider,
                     onComplete: { onboardingComplete = true }
                 )
+                // No user motion preference during first run; honor the system setting.
+                .environment(\.anchorMotion, AnchorMotion.effective(user: .full, systemReduceMotion: reduceMotion))
             case .none:
                 ProgressView()
             }

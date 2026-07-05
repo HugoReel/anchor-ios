@@ -45,3 +45,17 @@ public enum AnchorMotion {
         }
     }
 }
+
+private struct AnchorMotionKey: EnvironmentKey {
+    static let defaultValue: MotionLevel = .full
+}
+
+public extension EnvironmentValues {
+    /// The effective motion level for the current context — already the most
+    /// restrictive of the user's choice and system Reduce Motion. Views pass
+    /// it to `AnchorMotion.animation(for:)` so every animation is gated.
+    var anchorMotion: MotionLevel {
+        get { self[AnchorMotionKey.self] }
+        set { self[AnchorMotionKey.self] = newValue }
+    }
+}

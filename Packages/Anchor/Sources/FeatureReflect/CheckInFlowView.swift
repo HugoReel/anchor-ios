@@ -7,6 +7,7 @@ import AnchorDesign
 /// be skipped, and "I'm not sure" saves on its own.
 struct CheckInFlowView: View {
     @Environment(\.anchorTheme) private var theme
+    @Environment(\.anchorMotion) private var motion
     @Environment(\.dismiss) private var dismiss
     @Bindable var viewModel: ReflectViewModel
 
@@ -168,7 +169,7 @@ struct CheckInFlowView: View {
     }
 
     private func withAnimationIfAllowed(_ body: () -> Void) {
-        body()
+        withAnimation(AnchorMotion.animation(for: motion), body)
     }
 }
 
