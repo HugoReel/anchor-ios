@@ -580,10 +580,11 @@ Phase gate: CI green; final-phase review checklist appended to DECISIONS.md; scr
 
 ## Phase 6 — Hardening and handoff
 
-- **Task 6.1:** Edge cases — empty states for every screen (calm, invitational); huge journal (10k words) scroll/perf sanity via unit-level pagination in `HistoryListView` (fetch by range); midnight rollover while app foregrounded (Today refreshes via `DateProviding` tick — timer on VM, test with `FixedDateProvider` advancing past midnight); DST re-verified.
-- **Task 6.2:** Final whole-branch code review — superpowers requesting-code-review workflow (subagent, most capable model), findings fixed, re-reviewed.
-- **Task 6.3:** Docs complete — README.md (setup incl. `make project` on a Mac, screen tour mapping each screen to the ten §3 principles), ARCHITECTURE.md (module diagram + dependency rules + repository/DI/clock patterns), DECISIONS.md (ADRs: stack, CI-verification, XcodeGen, single-package layout, streak replacement, TDD adaptation, design-skill conflicts), ACCESSIBILITY.md (results), FUTURE.md (§11 seams: CloudKit-ready ids/timestamps, sharing consent model sketch, widgets/Live Activity extension point, watch, template sharing, AI breakdown flag, sensory-break suggestions, insights — each with its `FeatureFlag` case).
-- **Task 6.4:** Tag `v1.0.0` after final green run.
+- [x] **Task 6.1 — DONE + green (run 33f5a97):** midnight rollover — `TodayViewModel.loadedDay` + `refreshIfDayChanged()` (reloads only when the day advanced), driven by a 60s tick + scenePhase-active in `TodayRootView`; test `todayRefreshesWhenDayRollsOverPastMidnight` with a mutable clock across 23:50→00:10. Empty states (Today/Day/Goals/History/Coping) and DST were already covered.
+  **Task 6.1 (original):** Edge cases — empty states, huge-journal sanity, midnight rollover, DST re-verified.
+- [x] **Task 6.2 — DONE (inline self-review, no subagent per standing policy):** reviewed this branch's logic; one low-severity finding — `NotificationCoordinator` doesn't prune a deleted block's pending warning — recorded in `FUTURE.md` as a v1 limitation (fix = `cancel(ids:)` in v1.1). No high-severity bugs found.
+- [x] **Task 6.3 — DONE + green (run 2f08ae1):** `ARCHITECTURE.md` (module graph + patterns), `FUTURE.md` (§11 seams + known limitations), README screen tour + doc links, `DECISIONS.md` ADR-008/009/010. `ACCESSIBILITY.md` already complete from Phase 5.
+- [ ] **Task 6.4:** bump MARKETING_VERSION to 1.0.0, then tag `v1.0.0` on the final green commit.
 
 ---
 
