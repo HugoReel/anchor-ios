@@ -1,9 +1,9 @@
-# CI report — main @ efbf8f2835605b0eda70ade1a7b02346e9a89ca8
+# CI report — main @ 70c5308e3c1c96837bc1c01601fc97c7b8955d84
 
-- run: 28737840333 attempt 1
+- run: 28737972295 attempt 1
 - outcome: success
-- date: 2026-07-05T10:35:54Z
-- url: https://github.com/HugoReel/anchor-ios/actions/runs/28737840333
+- date: 2026-07-05T10:40:58Z
+- url: https://github.com/HugoReel/anchor-ios/actions/runs/28737972295
 
 ## build/lint.log
 
@@ -23,56 +23,56 @@
 
 ### summary lines
 ```
-Test Suite 'All tests' started at 2026-07-05 10:34:11.828.
-Test Suite 'All tests' passed at 2026-07-05 10:34:11.828.
+Test Suite 'All tests' started at 2026-07-05 10:40:08.491.
+Test Suite 'All tests' passed at 2026-07-05 10:40:08.491.
 	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
 ◇ Test run started.
-✔ Test run with 95 tests passed after 0.120 seconds.
-Test Suite 'All tests' started at 2026-07-05 10:34:13.786.
-Test Suite 'All tests' passed at 2026-07-05 10:34:13.786.
+✔ Test run with 95 tests passed after 0.134 seconds.
+Test Suite 'All tests' started at 2026-07-05 10:40:11.643.
+Test Suite 'All tests' passed at 2026-07-05 10:40:11.643.
 	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
 ◇ Test run started.
-✔ Test run with 8 tests passed after 0.023 seconds.
-Test Suite 'All tests' started at 2026-07-05 10:34:14.733.
-Test Suite 'All tests' passed at 2026-07-05 10:34:14.733.
+✔ Test run with 8 tests passed after 0.020 seconds.
+Test Suite 'All tests' started at 2026-07-05 10:40:13.705.
+Test Suite 'All tests' passed at 2026-07-05 10:40:13.705.
 	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
 ◇ Test run started.
-✔ Test run with 13 tests passed after 0.105 seconds.
-Test Suite 'All tests' started at 2026-07-05 10:34:15.703.
-Test Suite 'All tests' passed at 2026-07-05 10:34:15.704.
-	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
-◇ Test run started.
-✔ Test run with 7 tests passed after 0.004 seconds.
-Test Suite 'All tests' started at 2026-07-05 10:34:27.300.
-Test Suite 'All tests' passed at 2026-07-05 10:34:27.300.
+✔ Test run with 13 tests passed after 0.101 seconds.
+Test Suite 'All tests' started at 2026-07-05 10:40:15.451.
+Test Suite 'All tests' passed at 2026-07-05 10:40:15.451.
 	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
 ◇ Test run started.
-✔ Test run with 9 tests passed after 0.222 seconds.
-Test Suite 'All tests' started at 2026-07-05 10:34:42.855.
-Test Suite 'All tests' passed at 2026-07-05 10:34:42.855.
+✔ Test run with 7 tests passed after 0.007 seconds.
+Test Suite 'All tests' started at 2026-07-05 10:40:18.694.
+Test Suite 'All tests' passed at 2026-07-05 10:40:18.694.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+◇ Test run started.
+✔ Test run with 9 tests passed after 0.041 seconds.
+Test Suite 'All tests' started at 2026-07-05 10:40:20.766.
+Test Suite 'All tests' passed at 2026-07-05 10:40:20.766.
 	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
 ◇ Test run started.
 ✔ Test run with 3 tests passed after 0.003 seconds.
-Test Suite 'All tests' started at 2026-07-05 10:34:45.658.
-Test Suite 'All tests' passed at 2026-07-05 10:34:45.659.
-	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+Test Suite 'All tests' started at 2026-07-05 10:40:23.372.
+Test Suite 'All tests' passed at 2026-07-05 10:40:23.376.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.004) seconds
 ◇ Test run started.
-✔ Test run with 10 tests passed after 0.013 seconds.
-Test Suite 'All tests' started at 2026-07-05 10:34:48.176.
-Test Suite 'All tests' passed at 2026-07-05 10:34:48.176.
-	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
-◇ Test run started.
-✔ Test run with 4 tests passed after 0.120 seconds.
-Test Suite 'All tests' started at 2026-07-05 10:34:52.368.
-Test Suite 'All tests' passed at 2026-07-05 10:34:52.369.
-	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
-◇ Test run started.
-✔ Test run with 16 tests passed after 0.057 seconds.
-Test Suite 'All tests' started at 2026-07-05 10:35:02.660.
-Test Suite 'All tests' passed at 2026-07-05 10:35:02.660.
+✔ Test run with 10 tests passed after 0.035 seconds.
+Test Suite 'All tests' started at 2026-07-05 10:40:25.105.
+Test Suite 'All tests' passed at 2026-07-05 10:40:25.105.
 	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
 ◇ Test run started.
-✔ Test run with 13 tests passed after 0.226 seconds.
+✔ Test run with 4 tests passed after 0.064 seconds.
+Test Suite 'All tests' started at 2026-07-05 10:40:26.551.
+Test Suite 'All tests' passed at 2026-07-05 10:40:26.552.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+◇ Test run started.
+✔ Test run with 16 tests passed after 0.019 seconds.
+Test Suite 'All tests' started at 2026-07-05 10:40:27.934.
+Test Suite 'All tests' passed at 2026-07-05 10:40:27.935.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+◇ Test run started.
+✔ Test run with 13 tests passed after 0.010 seconds.
 ** TEST SUCCEEDED **
 ```
 
