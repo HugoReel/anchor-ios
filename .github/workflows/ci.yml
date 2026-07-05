@@ -17,6 +17,28 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Decide UI tests
+        id: uidecide
+        run: |
+          set -euo pipefail
+          # The launch smoke only exercises the app shell, so run it only when
+          # that changed (or on a manual dispatch) rather than on every push.
+          RUN=false
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            RUN=true
+          elif git rev-parse HEAD^ >/dev/null 2>&1; then
+            if git diff --name-only HEAD^ HEAD \
+              | grep -qE '^(App/|AnchorUITests/|project\.yml|Makefile|\.github/workflows/ci\.yml)'; then
+              RUN=true
+            fi
+          else
+            RUN=true
+          fi
+          echo "run=$RUN" >> "$GITHUB_OUTPUT"
+          echo "Run UI tests: $RUN"
 
       - name: Tool versions
         run: |
@@ -62,7 +84,7 @@ jobs:
         run: make build SIM_NAME="${{ steps.sim.outputs.name }}"
 
       - name: App UI tests
-        if: ${{ hashFiles('project.yml') != '' }}
+        if: ${{ steps.uidecide.outputs.run == 'true' && hashFiles('project.yml') != '' }}
         run: make uitest SIM_NAME="${{ steps.sim.outputs.name }}"
 
       - name: Publish ci-logs
