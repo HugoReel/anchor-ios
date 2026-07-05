@@ -40,6 +40,10 @@ public struct UserPreferences: Sendable, Hashable, Codable, Identifiable {
     /// Whether the seed coping examples have been inserted once. Optional for
     /// backward-compatible decoding; nil means not yet seeded.
     public var copingSeeded: Bool?
+    /// Whether local notifications are on. Set only after the system grants
+    /// authorization; turning it off cancels everything. Optional for
+    /// backward-compatible decoding; nil means never enabled.
+    public var notificationsEnabled: Bool?
     public let createdAt: Date
     public var modifiedAt: Date
 
@@ -70,6 +74,7 @@ public struct UserPreferences: Sendable, Hashable, Codable, Identifiable {
         reflectionNudgeDismissedDayKey: Int? = nil,
         energyPromptDismissedDayKey: Int? = nil,
         copingSeeded: Bool? = nil,
+        notificationsEnabled: Bool? = nil,
         createdAt: Date = Date(),
         modifiedAt: Date = Date()
     ) {
@@ -99,6 +104,7 @@ public struct UserPreferences: Sendable, Hashable, Codable, Identifiable {
         self.reflectionNudgeDismissedDayKey = reflectionNudgeDismissedDayKey
         self.energyPromptDismissedDayKey = energyPromptDismissedDayKey
         self.copingSeeded = copingSeeded
+        self.notificationsEnabled = notificationsEnabled
         self.createdAt = createdAt
         self.modifiedAt = modifiedAt
     }
