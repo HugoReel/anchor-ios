@@ -160,3 +160,128 @@ private enum Fixture {
 
     #expect(viewModel.showReflectionNudge == false)
 }
+
+// MARK: - Task 3.5: energy, lightening, low-demand, wins pause
+
+@MainActor
+private struct Harness {
+    let viewModel: TodayViewModel
+    let plans: InMemoryDayPlanRepository
+    let energy: InMemoryEnergyRepository
+    let wins: InMemoryWinRepository
+    let preferences: InMemoryPreferencesRepository
+}
+
+@MainActor
+private func makeHarness(
+    plan: DayPlan?,
+    preferences: UserPreferences = UserPreferences(),
+    energyToday: EnergyCheckIn? = nil,
+    wins: [WinEvent] = [],
+    at hour: Int,
+    _ minute: Int = 0
+) async -> Harness {
+    let plans = InMemoryDayPlanRepository()
+    if let plan { try? await plans.upsert(plan) }
+    let energyRepo = InMemoryEnergyRepository()
+    if let energyToday { try? await energyRepo.upsert(energyToday) }
+    let winRepo = InMemoryWinRepository(calendar: Fixture.calendar)
+    for event in wins { try? await winRepo.append(event) }
+    let prefsRepo = InMemoryPreferencesRepository()
+    try? await prefsRepo.save(preferences)
+    let viewModel = TodayViewModel(
+        dayPlans: plans,
+        energy: energyRepo,
+        wins: winRepo,
+        preferences: prefsRepo,
+        dateProvider: Fixture.provider(hour, minute)
+    )
+    return Harness(viewModel: viewModel, plans: plans, energy: energyRepo, wins: winRepo, preferences: prefsRepo)
+}
+
+@MainActor
+@Test func firstOpenPromptsOncePerDay() async {
+    let harness = await makeHarness(plan: nil, at: 8)
+    await harness.viewModel.load()
+    #expect(harness.viewModel.showEnergyPrompt)
+
+    await harness.viewModel.dismissEnergyPrompt()
+    #expect(harness.viewModel.showEnergyPrompt == false)
+
+    // Same day, reopened: the prompt does not return even with no check-in.
+    await harness.viewModel.load()
+    #expect(harness.viewModel.showEnergyPrompt == false)
+}
+
+@MainActor
+@Test func applySuggestionRequiresExplicitUserAction() async {
+    let laundry = TimeBlock(
+        title: "Laundry",
+        category: .focus,
+        startTime: Fixture.at(14),
+        durationMinutes: 30,
+        orderIndex: 0,
+        isFlexible: true
+    )
+    let plan = DayPlan(date: Fixture.day, mode: .clock, blocks: [laundry])
+    let harness = await makeHarness(plan: plan, at: 8)
+    await harness.viewModel.load()
+
+    await harness.viewModel.submitEnergy(level: 1)
+    #expect(!harness.viewModel.lighteningSuggestions.isEmpty)
+
+    // Offering a suggestion must not change the plan on its own.
+    let before = (try? await harness.plans.plan(for: Fixture.day)) ?? nil
+    #expect(before?.blocks.count == 1)
+
+    guard let suggestion = harness.viewModel.lighteningSuggestions.first else {
+        Issue.record("expected a lightening suggestion")
+        return
+    }
+    await harness.viewModel.applySuggestion(suggestion)
+
+    // Postpone moves it off today onto the next day; nothing else touched.
+    let todayAfter = (try? await harness.plans.plan(for: Fixture.day)) ?? nil
+    #expect(todayAfter?.blocks.isEmpty == true)
+    let tomorrow = Fixture.day.advanced(by: 1, calendar: Fixture.calendar)
+    let tomorrowAfter = (try? await harness.plans.plan(for: tomorrow)) ?? nil
+    #expect(tomorrowAfter?.blocks.count == 1)
+    #expect(harness.viewModel.lighteningSuggestions.isEmpty)
+}
+
+@MainActor
+@Test func lowDemandPersistsAcrossLaunches() async {
+    let harness = await makeHarness(plan: nil, at: 9)
+    await harness.viewModel.load()
+    #expect(harness.viewModel.presentation.invitational == false)
+
+    await harness.viewModel.setLowDemand(true)
+    #expect(harness.viewModel.presentation.invitational)
+
+    // A fresh view model over the same stored preferences still sees it on.
+    let relaunched = TodayViewModel(
+        dayPlans: harness.plans,
+        energy: harness.energy,
+        wins: harness.wins,
+        preferences: harness.preferences,
+        dateProvider: Fixture.provider(9)
+    )
+    await relaunched.load()
+    #expect(relaunched.presentation.invitational)
+}
+
+@MainActor
+@Test func winsNeverRenderZeroAfterHavingCounts() async {
+    var prefs = UserPreferences()
+    prefs.winsPaused = true
+    let wins = [WinEvent(date: Fixture.at(9), kind: .checkIn)]
+    let harness = await makeHarness(plan: nil, preferences: prefs, wins: wins, at: 10)
+
+    await harness.viewModel.load()
+
+    // Pausing keeps the existing counts and shows a paused note, not zero.
+    #expect(!harness.viewModel.winsSummaries.isEmpty)
+    #expect(harness.viewModel.winsArePaused)
+    let counts = harness.viewModel.winsSummaries.map(\.count)
+    #expect(counts.allSatisfy { $0 > 0 })
+}

@@ -18,7 +18,10 @@ struct TodayContentView: View {
                 if viewModel.showEnergyPrompt {
                     energyPromptCard
                 }
-                if !viewModel.winsSummaries.isEmpty {
+                if !viewModel.lighteningSuggestions.isEmpty {
+                    lighteningCard
+                }
+                if viewModel.presentation.showsWins && (!viewModel.winsSummaries.isEmpty || viewModel.winsArePaused) {
                     winsCard
                 }
                 if viewModel.showReflectionNudge {
@@ -28,6 +31,16 @@ struct TodayContentView: View {
             .padding(Spacing.md)
         }
         .background(theme.background.color)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    Task { await viewModel.setLowDemand(!viewModel.presentation.invitational) }
+                } label: {
+                    Image(systemName: viewModel.presentation.invitational ? "moon.fill" : "moon")
+                }
+                .accessibilityLabel(viewModel.presentation.invitational ? Copy.lowDemandTurnOff : Copy.lowDemandTurnOn)
+            }
+        }
     }
 
     // MARK: - Right now (hero)
@@ -91,12 +104,59 @@ struct TodayContentView: View {
     private var energyPromptCard: some View {
         AnchorCard {
             VStack(alignment: .leading, spacing: Spacing.sm) {
-                Text("How is your energy today?")
+                Text(Copy.energyPromptTitle)
                     .anchorFont(.title)
                     .foregroundStyle(theme.textPrimary.color)
-                Text("A quick check-in, only if you feel like it.")
+                Text(Copy.energyPromptBody)
                     .anchorFont(.body)
                     .foregroundStyle(theme.textSecondary.color)
+                HStack(spacing: Spacing.sm) {
+                    ForEach(1...5, id: \.self) { level in
+                        Button {
+                            Task { await viewModel.submitEnergy(level: level) }
+                        } label: {
+                            Text("\(level)")
+                                .anchorFont(.title)
+                                .foregroundStyle(theme.accentText.color)
+                                .frame(maxWidth: .infinity, minHeight: 44)
+                                .background(theme.accent.color, in: RoundedRectangle(cornerRadius: Radius.control))
+                        }
+                        .accessibilityLabel("Energy level \(level) of 5")
+                    }
+                }
+                .padding(.top, Spacing.xs)
+                Button {
+                    Task { await viewModel.dismissEnergyPrompt() }
+                } label: {
+                    Text(Copy.energyPromptSkip)
+                        .anchorFont(.body)
+                        .foregroundStyle(theme.textSecondary.color)
+                }
+            }
+        }
+    }
+
+    // MARK: - Lightening the day
+
+    private var lighteningCard: some View {
+        AnchorCard {
+            VStack(alignment: .leading, spacing: Spacing.sm) {
+                AnchorSectionLabel("A gentler day")
+                Text(Copy.lighteningIntro)
+                    .anchorFont(.body)
+                    .foregroundStyle(theme.textSecondary.color)
+                ForEach(viewModel.lighteningSuggestions, id: \.blockID) { suggestion in
+                    Button {
+                        Task { await viewModel.applySuggestion(suggestion) }
+                    } label: {
+                        Text(suggestion.reason)
+                            .anchorFont(.body)
+                            .foregroundStyle(theme.textPrimary.color)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(Spacing.sm)
+                            .background(theme.surfaceRaised.color, in: RoundedRectangle(cornerRadius: Radius.control))
+                    }
+                }
             }
         }
     }
@@ -111,6 +171,11 @@ struct TodayContentView: View {
                     Text(summary.label)
                         .anchorFont(.body)
                         .foregroundStyle(theme.textPrimary.color)
+                }
+                if viewModel.winsArePaused {
+                    Text(Copy.winsPausedNote)
+                        .anchorFont(.caption)
+                        .foregroundStyle(theme.textSecondary.color)
                 }
             }
         }

@@ -34,6 +34,9 @@ public struct UserPreferences: Sendable, Hashable, Codable, Identifiable {
     /// it stays gone for that day and returns fresh the next. Optional so it
     /// decodes from older stored payloads.
     public var reflectionNudgeDismissedDayKey: Int?
+    /// Day (`yyyymmdd`) on which the energy check-in prompt was dismissed, so
+    /// it only offers once per day. Optional for backward-compatible decoding.
+    public var energyPromptDismissedDayKey: Int?
     /// Whether the seed coping examples have been inserted once. Optional for
     /// backward-compatible decoding; nil means not yet seeded.
     public var copingSeeded: Bool?
@@ -65,6 +68,7 @@ public struct UserPreferences: Sendable, Hashable, Codable, Identifiable {
         onboardingComplete: Bool = false,
         seedDataInserted: Bool = false,
         reflectionNudgeDismissedDayKey: Int? = nil,
+        energyPromptDismissedDayKey: Int? = nil,
         copingSeeded: Bool? = nil,
         createdAt: Date = Date(),
         modifiedAt: Date = Date()
@@ -93,6 +97,7 @@ public struct UserPreferences: Sendable, Hashable, Codable, Identifiable {
         self.onboardingComplete = onboardingComplete
         self.seedDataInserted = seedDataInserted
         self.reflectionNudgeDismissedDayKey = reflectionNudgeDismissedDayKey
+        self.energyPromptDismissedDayKey = energyPromptDismissedDayKey
         self.copingSeeded = copingSeeded
         self.createdAt = createdAt
         self.modifiedAt = modifiedAt

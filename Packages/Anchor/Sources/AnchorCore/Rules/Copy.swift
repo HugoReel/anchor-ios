@@ -38,6 +38,18 @@ public enum Copy {
         "You could turn \u{201C}\(title)\u{201D} into rest"
     }
 
+    public static let energyPromptTitle = "How is your energy today?"
+    public static let energyPromptBody = "A quick sense of your capacity, if you want to share it. You can skip this."
+    public static let energyPromptSkip = "Skip for today"
+
+    public static let lighteningIntro = "If it would help, here are a few ways to lighten today. You choose what changes, one at a time."
+
+    public static let winsPausedNote = "Wins are paused. Your counts are kept and will pick up again when you resume."
+
+    public static let lowDemandOn = "Low-demand mode is on"
+    public static let lowDemandTurnOn = "Turn on low-demand mode"
+    public static let lowDemandTurnOff = "Turn off low-demand mode"
+
     /// Representative samples for the banned-phrase audit, including
     /// parameterised strings rendered with sample values.
     public static var auditableSamples: [String] {
@@ -56,7 +68,15 @@ public enum Copy {
             winsRest(count: 1),
             winsRest(count: 3),
             postponeSuggestion(title: "Laundry"),
-            convertToRestSuggestion(title: "Deep work")
+            convertToRestSuggestion(title: "Deep work"),
+            energyPromptTitle,
+            energyPromptBody,
+            energyPromptSkip,
+            lighteningIntro,
+            winsPausedNote,
+            lowDemandOn,
+            lowDemandTurnOn,
+            lowDemandTurnOff
         ]
     }
 }
