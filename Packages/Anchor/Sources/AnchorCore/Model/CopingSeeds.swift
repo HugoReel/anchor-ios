@@ -3,19 +3,25 @@ import Foundation
 /// A few editable example strategies, inserted once so the bank is never
 /// empty on first use. Users can change or remove any of them.
 public enum CopingSeeds {
+    private struct Seed {
+        let title: String
+        let note: String
+        let category: String
+    }
+
     public static func examples(now: Date = Date()) -> [CopingStrategy] {
-        let titles: [(String, String, String)] = [
-            ("Slow breathing", "In for four, out for six, a few times over.", "Calm the body"),
-            ("Step outside", "A minute of fresh air and a longer look at something far away.", "Change the scene"),
-            ("Quiet corner", "Somewhere dim and low-stimulation to settle.", "Reduce input"),
-            ("Comfort object", "Hold or fidget with something familiar.", "Ground yourself"),
-            ("Name five things", "Notice five things you can see, four you can hear.", "Come back to now")
+        let seeds: [Seed] = [
+            Seed(title: "Slow breathing", note: "In for four, out for six, a few times over.", category: "Calm the body"),
+            Seed(title: "Step outside", note: "A minute of fresh air and a longer look at something far away.", category: "Change the scene"),
+            Seed(title: "Quiet corner", note: "Somewhere dim and low-stimulation to settle.", category: "Reduce input"),
+            Seed(title: "Comfort object", note: "Hold or fidget with something familiar.", category: "Ground yourself"),
+            Seed(title: "Name five things", note: "Notice five things you can see, four you can hear.", category: "Come back to now")
         ]
-        return titles.enumerated().map { index, item in
+        return seeds.enumerated().map { index, seed in
             CopingStrategy(
-                title: item.0,
-                note: item.1,
-                category: item.2,
+                title: seed.title,
+                note: seed.note,
+                category: seed.category,
                 orderIndex: index,
                 isSeedExample: true,
                 createdAt: now,
