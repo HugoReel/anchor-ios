@@ -2,7 +2,7 @@ import Foundation
 import Testing
 @testable import AnchorCore
 
-private enum Fx {
+private enum NotifFixture {
     static var calendar: Calendar {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = .gmt
@@ -44,8 +44,8 @@ private enum Fx {
 @Test func schedulingOnlyAfterAuthorization() async {
     let scheduler = RecordingNotificationScheduler(granted: true)
     let prefs = InMemoryPreferencesRepository()
-    let coordinator = Fx.coordinator(scheduler: scheduler, prefs: prefs)
-    let plan = Fx.plan(startHour: 9)
+    let coordinator = NotifFixture.coordinator(scheduler: scheduler, prefs: prefs)
+    let plan = NotifFixture.plan(startHour: 9)
 
     // Not yet authorized: refreshing schedules nothing.
     await coordinator.refreshTransitionWarnings(for: plan)
@@ -62,10 +62,10 @@ private enum Fx {
 @Test func permanentOffCancelsEverything() async throws {
     let scheduler = RecordingNotificationScheduler(granted: true)
     let prefs = InMemoryPreferencesRepository()
-    let coordinator = Fx.coordinator(scheduler: scheduler, prefs: prefs)
+    let coordinator = NotifFixture.coordinator(scheduler: scheduler, prefs: prefs)
 
     await coordinator.enableReminders()
-    await coordinator.refreshTransitionWarnings(for: Fx.plan(startHour: 9))
+    await coordinator.refreshTransitionWarnings(for: NotifFixture.plan(startHour: 9))
     var scheduled = await scheduler.scheduled
     #expect(!scheduled.isEmpty)
 
@@ -81,14 +81,14 @@ private enum Fx {
 @Test func planChangeReschedulesWarnings() async {
     let scheduler = RecordingNotificationScheduler(granted: true)
     let prefs = InMemoryPreferencesRepository()
-    let coordinator = Fx.coordinator(scheduler: scheduler, prefs: prefs)
+    let coordinator = NotifFixture.coordinator(scheduler: scheduler, prefs: prefs)
     await coordinator.enableReminders()
 
-    let original = Fx.block(startHour: 9)
-    let planV1 = DayPlan(date: Fx.day, mode: .clock, blocks: [original])
+    let original = NotifFixture.block(startHour: 9)
+    let planV1 = DayPlan(date: NotifFixture.day, mode: .clock, blocks: [original])
     var shifted = original
-    shifted.startTime = Fx.at(11)
-    let planV2 = DayPlan(date: Fx.day, mode: .clock, blocks: [shifted])
+    shifted.startTime = NotifFixture.at(11)
+    let planV2 = DayPlan(date: NotifFixture.day, mode: .clock, blocks: [shifted])
 
     await coordinator.refreshTransitionWarnings(for: planV1)
     let firstPending = await scheduler.pending()
@@ -98,7 +98,7 @@ private enum Fx {
     #expect(firstPending == secondPending)
     let scheduled = await scheduler.scheduled
     #expect(scheduled.count == 1)
-    #expect(scheduled.first?.fireDate == Fx.at(11, 45))
+    #expect(scheduled.first?.fireDate == NotifFixture.at(11, 45))
 }
 
 @Test func noSchedulingWhileLowDemand() async throws {
@@ -108,9 +108,9 @@ private enum Fx {
     stored.notificationsEnabled = true
     stored.lowDemandMode = true
     try await prefs.save(stored)
-    let coordinator = Fx.coordinator(scheduler: scheduler, prefs: prefs)
+    let coordinator = NotifFixture.coordinator(scheduler: scheduler, prefs: prefs)
 
-    await coordinator.refreshTransitionWarnings(for: Fx.plan(startHour: 9))
+    await coordinator.refreshTransitionWarnings(for: NotifFixture.plan(startHour: 9))
     let scheduled = await scheduler.scheduled
     #expect(scheduled.isEmpty)
 }
