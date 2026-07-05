@@ -38,3 +38,15 @@ type_body_length:
 file_length:
   warning: 500
   error: 800
+
+# Dynamic Type guard (Task 5.2): a height-only frame constrains a view's
+# height while its text wants to grow, clipping at large accessibility sizes.
+# Graphical elements use `.frame(width:height:)` and are unaffected; text rows
+# must use minHeight / ViewThatFits, or add an explicit swiftlint:disable with
+# a note. No current code trips this — it guards future changes.
+custom_rules:
+  height_only_frame:
+    name: "Height-only frame"
+    regex: '\.frame\(height:'
+    message: "Height-only frames can clip text at large Dynamic Type sizes; use minHeight or ViewThatFits (or disable with a note)."
+    severity: warning
