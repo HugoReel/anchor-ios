@@ -87,6 +87,26 @@ jobs:
         if: ${{ steps.uidecide.outputs.run == 'true' && hashFiles('project.yml') != '' }}
         run: make uitest SIM_NAME="${{ steps.sim.outputs.name }}"
 
+      - name: Export screenshots
+        if: ${{ steps.uidecide.outputs.run == 'true' && hashFiles('project.yml') != '' }}
+        run: |
+          set -uo pipefail
+          mkdir -p build/screenshots
+          brew install chargepoint/xcparse/xcparse || true
+          xcparse screenshots build/uitest.xcresult build/screenshots \
+            || echo "xcparse unavailable; the raw .xcresult is uploaded instead"
+          find build/screenshots -type f -name '*.png' | head -50 || true
+
+      - name: Upload screenshots
+        if: ${{ always() && steps.uidecide.outputs.run == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: anchor-screenshots
+          path: |
+            build/screenshots/**
+            build/uitest.xcresult/**
+          if-no-files-found: ignore
+
       - name: Publish ci-logs
         if: always()
         env:

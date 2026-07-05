@@ -31,8 +31,10 @@ build: project
 
 uitest: project
 	@mkdir -p build
+	rm -rf build/uitest.xcresult
 	set -o pipefail; xcodebuild test -scheme Anchor -project Anchor.xcodeproj \
 	  -destination '$(DEST)' CODE_SIGNING_ALLOWED=NO \
+	  -resultBundlePath build/uitest.xcresult \
 	  -only-testing:AnchorUITests 2>&1 | tee build/app-uitest.log
 
 test: test-packages
