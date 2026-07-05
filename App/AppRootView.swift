@@ -1,4 +1,5 @@
 import SwiftUI
+import AnchorCore
 import FeatureOnboarding
 
 /// Decides between the first-run flow and the main app. Reads
@@ -27,8 +28,22 @@ struct AppRootView: View {
         }
         .task {
             guard onboardingComplete == nil else { return }
+            await demoSeeder.seedIfNeeded(enabled: FeatureFlag.seedDemoData)
             let prefs = try? await dependencies.store.load()
             onboardingComplete = prefs?.onboardingComplete ?? false
         }
+    }
+
+    private var demoSeeder: DemoSeeder {
+        DemoSeeder(
+            dayPlans: dependencies.store,
+            goals: dependencies.store,
+            reflections: dependencies.store,
+            energy: dependencies.store,
+            wins: dependencies.store,
+            coping: dependencies.store,
+            preferences: dependencies.store,
+            dateProvider: dependencies.dateProvider
+        )
     }
 }
