@@ -31,19 +31,22 @@ public final class TodayViewModel {
     private let wins: any WinRepository
     private let preferences: any PreferencesRepository
     private let dateProvider: any DateProviding
+    private let notifications: NotificationCoordinator?
 
     public init(
         dayPlans: any DayPlanRepository,
         energy: any EnergyRepository,
         wins: any WinRepository,
         preferences: any PreferencesRepository,
-        dateProvider: any DateProviding
+        dateProvider: any DateProviding,
+        notifications: NotificationCoordinator? = nil
     ) {
         self.dayPlans = dayPlans
         self.energy = energy
         self.wins = wins
         self.preferences = preferences
         self.dateProvider = dateProvider
+        self.notifications = notifications
         self.presentation = .standard(mode: .clock, preferences: UserPreferences())
     }
 
@@ -82,6 +85,8 @@ public final class TodayViewModel {
 
             showReflectionNudge = !presentation.invitational
                 && prefs.reflectionNudgeDismissedDayKey != today.numericKey
+
+            await notifications?.refreshTransitionWarnings(for: plan)
         } catch {
             loadFailed = true
         }

@@ -16,6 +16,7 @@ public final class SettingsViewModel {
     public private(set) var showWins: Bool = true
     public private(set) var winsPaused: Bool = false
     public private(set) var lowDemandMode: Bool = false
+    public private(set) var remindersEnabled: Bool = false
     /// First explicit confirmation arms the delete; the second carries it out.
     public private(set) var deleteArmed: Bool = false
     public private(set) var didDeleteEverything: Bool = false
@@ -28,17 +29,20 @@ public final class SettingsViewModel {
     private let preferences: any PreferencesRepository
     private let exporter: DataExporter
     private let wiper: any DataWiping
+    private let notifications: NotificationCoordinator?
     private let dateProvider: any DateProviding
 
     public init(
         preferences: any PreferencesRepository,
         exporter: DataExporter,
         wiper: any DataWiping,
-        dateProvider: any DateProviding
+        dateProvider: any DateProviding,
+        notifications: NotificationCoordinator? = nil
     ) {
         self.preferences = preferences
         self.exporter = exporter
         self.wiper = wiper
+        self.notifications = notifications
         self.dateProvider = dateProvider
     }
 
@@ -52,8 +56,21 @@ public final class SettingsViewModel {
             showWins = prefs.showWins
             winsPaused = prefs.winsPaused
             lowDemandMode = prefs.lowDemandMode
+            remindersEnabled = prefs.notificationsEnabled ?? false
         } catch {
             loadFailed = true
+        }
+    }
+
+    /// Turns reminders on (asking the system, only granted when allowed) or
+    /// off for good. Reflects the actual authorization result.
+    public func setReminders(_ enabled: Bool) async {
+        if enabled {
+            let granted = await notifications?.enableReminders() ?? false
+            remindersEnabled = granted
+        } else {
+            await notifications?.disableReminders()
+            remindersEnabled = false
         }
     }
 

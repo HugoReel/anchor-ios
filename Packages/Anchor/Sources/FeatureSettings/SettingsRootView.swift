@@ -11,6 +11,7 @@ public struct SettingsRootView: View {
     @State private var viewModel: SettingsViewModel
     @State private var shareItem: ShareItem?
     @State private var isExporting = false
+    @State private var showReminderExplainer = false
 
     @MainActor
     public init(
@@ -18,13 +19,15 @@ public struct SettingsRootView: View {
         exporter: DataExporter,
         wiper: any DataWiping,
         dateProvider: any DateProviding,
+        notifications: NotificationCoordinator? = nil,
         onPreferencesChanged: (@MainActor () -> Void)? = nil
     ) {
         let model = SettingsViewModel(
             preferences: preferences,
             exporter: exporter,
             wiper: wiper,
-            dateProvider: dateProvider
+            dateProvider: dateProvider,
+            notifications: notifications
         )
         model.onPreferencesChanged = onPreferencesChanged
         _viewModel = State(initialValue: model)
@@ -34,6 +37,7 @@ public struct SettingsRootView: View {
         Form {
             appearanceSection
             feedbackSection
+            remindersSection
             winsSection
             lowDemandSection
             dataSection
@@ -43,6 +47,9 @@ public struct SettingsRootView: View {
         .task { await viewModel.load() }
         .sheet(item: $shareItem) { item in
             ShareSheet(items: [item.url])
+        }
+        .sheet(isPresented: $showReminderExplainer) {
+            reminderExplainer
         }
         .alert("Delete everything?", isPresented: deleteAlertBinding) {
             Button("Cancel", role: .cancel) { viewModel.cancelDelete() }
@@ -81,6 +88,44 @@ public struct SettingsRootView: View {
             Toggle("Haptics", isOn: toggleBinding(\.hapticsEnabled) { await viewModel.setHaptics($0) })
             Toggle("Sound", isOn: toggleBinding(\.soundEnabled) { await viewModel.setSound($0) })
         }
+    }
+
+    // MARK: - Reminders
+
+    private var remindersSection: some View {
+        Section("Reminders") {
+            Toggle("Reminders", isOn: remindersBinding)
+            Text("Quiet, kindly worded, and easy to turn off. Off by default.")
+                .anchorFont(.caption)
+                .foregroundStyle(theme.textSecondary.color)
+        }
+    }
+
+    private var reminderExplainer: some View {
+        VStack(alignment: .leading, spacing: Spacing.md) {
+            Text(Copy.reminderExplainerTitle)
+                .anchorFont(.display)
+                .foregroundStyle(theme.textPrimary.color)
+            Text(Copy.reminderExplainerBody)
+                .anchorFont(.body)
+                .foregroundStyle(theme.textSecondary.color)
+            Spacer(minLength: 0)
+            Button {
+                showReminderExplainer = false
+                Task { await viewModel.setReminders(true) }
+            } label: {
+                Text(Copy.reminderTurnOn)
+                    .anchorFont(.title)
+                    .foregroundStyle(theme.accentText.color)
+                    .frame(maxWidth: .infinity, minHeight: 50)
+                    .background(theme.accent.color, in: RoundedRectangle(cornerRadius: Radius.control))
+            }
+            Button(Copy.reminderNotNow) { showReminderExplainer = false }
+                .foregroundStyle(theme.textSecondary.color)
+                .frame(maxWidth: .infinity)
+        }
+        .padding(Spacing.lg)
+        .background(theme.background.color)
     }
 
     // MARK: - Wins
@@ -159,6 +204,20 @@ public struct SettingsRootView: View {
 
     private var themeBinding: Binding<ThemeChoice> {
         Binding(get: { viewModel.theme }, set: { newValue in Task { await viewModel.update(theme: newValue) } })
+    }
+
+    private var remindersBinding: Binding<Bool> {
+        Binding(
+            get: { viewModel.remindersEnabled },
+            set: { newValue in
+                if newValue {
+                    // Explain first; the system prompt only follows an explicit tap.
+                    showReminderExplainer = true
+                } else {
+                    Task { await viewModel.setReminders(false) }
+                }
+            }
+        )
     }
 
     private var motionBinding: Binding<MotionLevel> {

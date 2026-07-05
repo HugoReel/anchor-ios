@@ -11,6 +11,7 @@ struct AppDependencies: Sendable {
     let logger: AnchorLogger
     let dateProvider: any DateProviding
     let store: SwiftDataStore
+    let scheduler: any NotificationScheduling
 
     static func live() -> AppDependencies {
         let logger = AnchorLogger(category: "app")
@@ -26,7 +27,17 @@ struct AppDependencies: Sendable {
             container = Self.inMemoryFallback()
         }
         let store = SwiftDataStore(modelContainer: container, calendar: dateProvider.calendar)
-        return AppDependencies(logger: logger, dateProvider: dateProvider, store: store)
+        return AppDependencies(
+            logger: logger,
+            dateProvider: dateProvider,
+            store: store,
+            scheduler: UserNotificationScheduler(calendar: dateProvider.calendar)
+        )
+    }
+
+    /// The notification coordinator, assembled from the store and scheduler.
+    var notifications: NotificationCoordinator {
+        NotificationCoordinator(scheduler: scheduler, preferences: store, dateProvider: dateProvider)
     }
 
     private static func inMemoryFallback() -> ModelContainer {

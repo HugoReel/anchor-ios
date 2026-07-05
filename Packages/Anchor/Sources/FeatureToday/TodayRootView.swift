@@ -13,7 +13,8 @@ public struct TodayRootView: View {
         energy: any EnergyRepository,
         wins: any WinRepository,
         preferences: any PreferencesRepository,
-        dateProvider: any DateProviding
+        dateProvider: any DateProviding,
+        notifications: NotificationCoordinator? = nil
     ) {
         _viewModel = State(
             initialValue: TodayViewModel(
@@ -21,7 +22,8 @@ public struct TodayRootView: View {
                 energy: energy,
                 wins: wins,
                 preferences: preferences,
-                dateProvider: dateProvider
+                dateProvider: dateProvider,
+                notifications: notifications
             )
         )
     }

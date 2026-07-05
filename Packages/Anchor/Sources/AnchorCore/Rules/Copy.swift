@@ -50,6 +50,11 @@ public enum Copy {
     public static let lowDemandTurnOn = "Turn on low-demand mode"
     public static let lowDemandTurnOff = "Turn off low-demand mode"
 
+    public static let reminderExplainerTitle = "Gentle reminders"
+    public static let reminderExplainerBody = "Reminders are quiet and kindly worded. Easy to snooze, and off whenever you like."
+    public static let reminderTurnOn = "Turn on reminders"
+    public static let reminderNotNow = "Not now"
+
     /// Representative samples for the banned-phrase audit, including
     /// parameterised strings rendered with sample values.
     public static var auditableSamples: [String] {
@@ -76,7 +81,11 @@ public enum Copy {
             winsPausedNote,
             lowDemandOn,
             lowDemandTurnOn,
-            lowDemandTurnOff
+            lowDemandTurnOff,
+            reminderExplainerTitle,
+            reminderExplainerBody,
+            reminderTurnOn,
+            reminderNotNow
         ]
     }
 }

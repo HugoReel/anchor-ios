@@ -30,7 +30,8 @@ struct RootTabView: View {
                     energy: dependencies.store,
                     wins: dependencies.store,
                     preferences: dependencies.store,
-                    dateProvider: dependencies.dateProvider
+                    dateProvider: dependencies.dateProvider,
+                    notifications: dependencies.notifications
                 ),
                 title: "Today",
                 symbol: "sun.max"
@@ -84,6 +85,7 @@ struct RootTabView: View {
             exporter: makeExporter(),
             wiper: dependencies.store,
             dateProvider: dependencies.dateProvider,
+            notifications: dependencies.notifications,
             onPreferencesChanged: { Task { await chrome.reload() } }
         )
     }
