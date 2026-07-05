@@ -107,3 +107,52 @@ win. Low-Demand Mode and sequence mode narrow what the UI shows
 
 **Consequences.** Guilt states are unrepresentable, not merely unstyled. Copy
 is audited by test (`CopyTests`) for banned phrases.
+
+## ADR-008 — The notification boundary protocol lives in AnchorCore
+
+**Context.** The spec sketch put `NotificationScheduling` in AnchorPlatform,
+but feature view models (which decide when to schedule) may depend only on
+Core + Design, and a recording test double needs to be visible to Core tests.
+
+**Decision.** The `NotificationScheduling` protocol and its
+`RecordingNotificationScheduler` double live in AnchorCore, mirroring the
+repository pattern; the `UNUserNotificationCenter` adapter
+(`UserNotificationScheduler`) lives in AnchorPlatform. The adapter does not
+store the notification centre (it is not `Sendable`) — it reads `.current()`
+per call.
+
+**Consequences.** Consistent with ADR-003's "protocols in Core, adapters in
+Platform". Local notifications need no entitlement, so the app also sideloads
+under a free Apple ID.
+
+## ADR-009 — Cross-cutting collaborators are optional-injected
+
+**Context.** Notifications (and app-wide theme/motion) arrived after the
+feature view models and their tests already existed. Adding a required
+constructor parameter would churn every call site and test.
+
+**Decision.** The `NotificationCoordinator` is an optional dependency on the
+view models that use it (`TodayViewModel`, `SettingsViewModel`), defaulting to
+`nil`; the app injects a real one, tests leave it out. App-wide theme and the
+effective motion level flow through the `\.anchorTheme` / `\.anchorMotion`
+environment values set once at the root, so no view model owns them.
+
+**Consequences.** Existing tests were untouched; the coordinator is exercised by
+its own Core tests with the recording double. Motion is gated in exactly one
+place (`AnchorMotion.effective` → `AnchorMotion.animation(for:)`).
+
+## ADR-010 — The XCUITest is path-gated; release artifacts are on-demand
+
+**Context.** The simulator launch smoke adds ~1 minute (boot + install) to CI,
+wasteful on the frequent domain-only pushes, and a device `.ipa` is a release
+concern, not a per-push one.
+
+**Decision.** The UI-test CI step runs only when the app shell changes
+(`App/**`, `project.yml`, `AnchorUITests/**`, `Makefile`, the workflow) or on
+manual dispatch. Screens are captured as an artifact from that run. A separate
+`workflow_dispatch` "Build IPA" pipeline produces an unsigned Release device
+`.ipa` for personal sideloading (AltStore/Sideloadly re-sign with a free
+Apple ID).
+
+**Consequences.** Domain-only pushes finish in ~3–4 minutes; the shell and the
+installable build are still verified whenever they matter.
