@@ -5,6 +5,10 @@ name: Build IPA
 # ("Build IPA" → Run workflow), then download the anchor-ipa artifact.
 on:
   workflow_dispatch:
+  # Also builds when this workflow itself changes, so it stays verified.
+  push:
+    paths:
+      - .github/workflows/ipa.yml
 
 permissions:
   contents: read
