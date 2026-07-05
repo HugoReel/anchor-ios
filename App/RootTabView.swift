@@ -1,4 +1,6 @@
 import SwiftUI
+import AnchorCore
+import AnchorDesign
 import FeatureToday
 import FeatureTimeline
 import FeatureGoals
@@ -13,6 +15,12 @@ struct RootTabView: View {
     let dependencies: AppDependencies
 
     @State private var showCoping = false
+    @State private var chrome: AppChromeModel
+
+    init(dependencies: AppDependencies) {
+        self.dependencies = dependencies
+        _chrome = State(initialValue: AppChromeModel(preferences: dependencies.store))
+    }
 
     var body: some View {
         TabView {
@@ -66,6 +74,31 @@ struct RootTabView: View {
                 dateProvider: dependencies.dateProvider
             )
         }
+        .environment(\.anchorTheme, chrome.theme)
+        .task { await chrome.reload() }
+    }
+
+    private var settingsDestination: some View {
+        SettingsRootView(
+            preferences: dependencies.store,
+            exporter: makeExporter(),
+            wiper: dependencies.store,
+            dateProvider: dependencies.dateProvider,
+            onPreferencesChanged: { Task { await chrome.reload() } }
+        )
+    }
+
+    private func makeExporter() -> DataExporter {
+        DataExporter(
+            dayPlans: dependencies.store,
+            templates: dependencies.store,
+            goals: dependencies.store,
+            reflections: dependencies.store,
+            energy: dependencies.store,
+            wins: dependencies.store,
+            coping: dependencies.store,
+            preferences: dependencies.store
+        )
     }
 
     private func tab(_ content: some View, title: String, symbol: String) -> some View {
@@ -84,7 +117,7 @@ struct RootTabView: View {
                     }
                     ToolbarItem(placement: .topBarTrailing) {
                         NavigationLink {
-                            SettingsRootView()
+                            settingsDestination
                         } label: {
                             Image(systemName: "gearshape")
                         }
